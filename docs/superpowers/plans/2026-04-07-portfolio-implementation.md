@@ -360,12 +360,25 @@ export default function BentoGrid() {
           <motion.div 
             layoutId={selected.id}
             className="fullscreen-overlay"
-            onClick={() => setSelected(null)}
           >
             <div className="expanded-content">
-              <h2>{selected.title}</h2>
-              <p>Details and sidebar logic here...</p>
-              <button className="close-btn">×</button>
+              <div className="media-preview">
+                {/* Large Video/Image Placeholder */}
+                <div className="placeholder-media" />
+              </div>
+              <div className="sidebar">
+                <h2>{selected.title}</h2>
+                <p className="type">{selected.type}</p>
+                <div className="technical-stats">
+                  <span>Polycount: 12k</span>
+                  <span>Textures: 2k PBR</span>
+                </div>
+                <div className="actions">
+                  <button className="download-btn">Download Tool</button>
+                  <a href="#" target="_blank" className="site-link">Open Site 🔗</a>
+                </div>
+                <button className="close-btn" onClick={() => setSelected(null)}>BACK</button>
+              </div>
             </div>
           </motion.div>
         )}

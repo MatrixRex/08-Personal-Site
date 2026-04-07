@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "triplex": "triplex",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -12,9 +13,12 @@
   "dependencies": {
     "@react-three/drei": "^9.102.6",
     "@react-three/fiber": "^8.15.19",
+    "@react-three/postprocessing": "^3.0.4",
     "@types/three": "^0.162.0",
     "framer-motion": "^11.0.8",
+    "leva": "^0.10.1",
     "lucide-react": "^0.358.0",
+    "postprocessing": "^6.39.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.162.0"

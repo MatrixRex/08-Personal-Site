@@ -13,14 +13,36 @@
   --sharp-corner: 0px; /* Sharp corners for mecha feel */
 }
 
+:root {
+  --color-cyan: #00E5FF;
+  --color-lime: #76FF03;
+  --color-bg: #FAFAFA;
+  --color-steel: #37474F;
+  --color-hud-bg: rgba(255, 255, 255, 0.4);
+  --color-hud-border: rgba(0, 229, 255, 0.3);
+  
+  --font-main: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --hud-blur: blur(10px);
+  --sharp-corner: 0px; /* Sharp corners for mecha feel */
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Leva UI styling - keep it clean and out of header way */
+.leva-c-kWgByx {
+  top: 90px !important;
+  right: 15px !important;
+}
+
+
 body {
-  background-color: var(--color-bg);
+  background: linear-gradient(135deg, #FAFAFA 0%, #E0F7FA 100%);
   color: var(--color-steel);
   font-family: var(--font-main);
   overflow-x: hidden; /* Controlled by horizontal scroll */
