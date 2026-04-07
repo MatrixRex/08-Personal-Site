@@ -1,0 +1,50 @@
+.solar-hud {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  background: var(--color-hud-bg);
+  backdrop-filter: var(--hud-blur);
+  border: 1px solid var(--color-hud-border);
+  z-index: 1000;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.hud-nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.hud-nav button {
+  background: none;
+  border: none;
+  color: var(--color-steel);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+
+.hud-nav button:hover {
+  color: var(--color-cyan);
+  text-shadow: 0 0 8px var(--color-cyan);
+}
+
+.hud-id, .hud-status {
+  color: var(--color-cyan);
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .hud-nav {
+    display: none; /* Mobile menu will be handled in later task */
+  }
+}
