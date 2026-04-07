@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import MechaHero from './components/MechaHero';
 import Header from './components/Header';
+import BentoGrid from './components/BentoGrid';
 import './App.css';
 
 function App() {
@@ -24,12 +25,9 @@ function App() {
           </div>
         </section>
         
-        {/* Slide 2: WORK (Bento Component to follow in Task 6) */}
+        {/* Slide 2: WORK */}
         <section className="slide work-slide">
-          <div className="bento-placeholder">
-            <h2>3D_PORTFOLIO / BENTO_GRID</h2>
-            <div className="loading-line" />
-          </div>
+          <BentoGrid />
         </section>
         
         <section className="slide tech-slide">
