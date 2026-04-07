@@ -20,6 +20,16 @@
 .hud-nav {
   display: flex;
   gap: 2rem;
+  display: flex;
+}
+
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--color-cyan);
+  cursor: pointer;
+  z-index: 1100;
 }
 
 .hud-nav button {
@@ -45,6 +55,41 @@
 
 @media (max-width: 768px) {
   .hud-nav {
-    display: none; /* Mobile menu will be handled in later task */
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10,10,20,0.95);
+    backdrop-filter: var(--hud-blur);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 1050;
+  }
+  
+  .hud-nav.open {
+    transform: translateX(0);
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 3rem;
+  }
+
+  .nav-links button {
+    font-size: 1.5rem;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+  
+  .hud-status {
+    display: none;
   }
 }
