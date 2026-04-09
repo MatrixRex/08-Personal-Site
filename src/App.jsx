@@ -79,8 +79,20 @@ function App() {
 
       {/* Background outlined text */}
       <div className="bg-text-container">
-        <h1 className="bg-text">COMING</h1>
-        <h1 className="bg-text">SOON</h1>
+        <div className="bg-text-group">
+          <svg className="bg-text-svg" viewBox="0 0 1000 200">
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3">COMING</text>
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2">COMING</text>
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-1">COMING</text>
+          </svg>
+        </div>
+        <div className="bg-text-group">
+          <svg className="bg-text-svg" viewBox="0 0 1000 200">
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3">SOON</text>
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2">SOON</text>
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-1">SOON</text>
+          </svg>
+        </div>
       </div>
 
       {/* 3D Canvas container */}
