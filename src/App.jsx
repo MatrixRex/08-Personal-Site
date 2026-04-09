@@ -39,7 +39,7 @@ function App() {
   return (
     <div className="coming-soon-wrapper">
       <Leva collapsed />
-      
+
       {/* Dynamic Gradient Background Blobs */}
       <div className="gradient-bg">
         <div className="blob blob-1"></div>
@@ -59,7 +59,7 @@ function App() {
 
       {/* Header */}
       <header className="main-header">
-        <motion.div 
+        <motion.div
           className="header-content"
           initial={{ y: -100 }}
           animate={{ y: 0 }}
@@ -82,12 +82,16 @@ function App() {
         <svg style={{ position: 'absolute', width: 0, height: 0 }}>
           <defs>
             <filter id="perfect-outline">
-              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="1.5"/>
-              <feComposite in="expanded" in2="SourceAlpha" operator="out" />
+              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="1"/>
+              <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outline"/>
+              <feFlood floodColor="white" result="color"/>
+              <feComposite in="color" in2="outline" operator="in"/>
             </filter>
             <filter id="perfect-outline-thin">
-              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="1"/>
-              <feComposite in="expanded" in2="SourceAlpha" operator="out" />
+              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius=".8"/>
+              <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outline"/>
+              <feFlood floodColor="white" result="color"/>
+              <feComposite in="color" in2="outline" operator="in"/>
             </filter>
           </defs>
         </svg>
@@ -119,7 +123,7 @@ function App() {
       <div className="overlay-ui">
         {/* Central Info Blocks */}
         <div className="info-grid">
-          <motion.div 
+          <motion.div
             className="info-block glass"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -127,7 +131,7 @@ function App() {
           >
             <span className="label">LAUNCHING SOON</span>
           </motion.div>
-          <motion.div 
+          <motion.div
             className="info-block glass disabled"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -138,7 +142,7 @@ function App() {
         </div>
 
         {/* Media Control Bar */}
-        <motion.div 
+        <motion.div
           className="media-bar glass"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -157,8 +161,8 @@ function App() {
             <div className="timestamp-container">
               <div className="fake-milis all-reels">
                 {[...Array(13)].map((_, i) => (
-                  <div 
-                    key={i} 
+                  <div
+                    key={i}
                     className="mili-reel"
                     style={{ animationDuration: `${0.05 * Math.pow(1.6, 12 - i)}s` }}
                   >
@@ -174,7 +178,7 @@ function App() {
         </motion.div>
 
         {/* Footer Info Section */}
-        <motion.div 
+        <motion.div
           className="terminal-section"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

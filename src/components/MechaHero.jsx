@@ -68,10 +68,10 @@ export default function MechaHero() {
     cameraTarget: { value: [-0.826, 0.753, -0.665], step: 0.1 },
     cameraFov: { value: 45, min: 10, max: 120 },
     copyCameraSettings: button(() => {
+      // Direct access to the live three.js objects
       const controls = controlsRef.current;
       const camera = controls?.object;
       const target = controls?.target;
-
       if (!camera || !target) return;
 
       copyJson('camera settings', {
@@ -94,11 +94,11 @@ export default function MechaHero() {
     modelPosition: { value: [0, 0, 0], step: 0.1 },
     modelRotation: { value: [0, 0, 0], step: 0.05 },
     modelScale: { value: 1, min: 0.1, max: 10, step: 0.1 },
-    copyModelSettings: button(() => {
+    copyModelSettings: button((get) => {
       copyJson('model settings', {
-        modelPosition,
-        modelRotation,
-        modelScale
+        modelPosition: get('Model Transform.modelPosition'),
+        modelRotation: get('Model Transform.modelRotation'),
+        modelScale: get('Model Transform.modelScale')
       });
     }, { label: 'Copy Model Settings' })
   }, { hidden: !isDev });
@@ -108,32 +108,32 @@ export default function MechaHero() {
     pointIntensity: { value: 1.3, min: 0, max: 20 },
     pointPos: { value: [-2.6, 3.5, -3.4] },
     pointColor: '#64339c',
-    copyLightSettings: button(() => {
+    copyLightSettings: button((get) => {
       copyJson('light settings', {
-        ambientIntensity,
-        pointIntensity,
-        pointPos,
-        pointColor
+        ambientIntensity: get('Lights.ambientIntensity'),
+        pointIntensity: get('Lights.pointIntensity'),
+        pointPos: get('Lights.pointPos'),
+        pointColor: get('Lights.pointColor')
       });
     }, { label: 'Copy Light Settings' })
   }, { hidden: !isDev });
 
   const { preset, blur, intensity, envRotation, envBackground } = useControls('Environment', {
     preset: {
-      value: 'forest',
+      value: 'night',
       options: ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby']
     },
     blur: { value: 0, min: 0, max: 1 },
-    intensity: { value: 0.4, min: 0, max: 5 },
-    envRotation: { value: 1.17, min: 0, max: Math.PI * 2, step: 0.01 },
+    intensity: { value: 0.2, min: 0, max: 5 },
+    envRotation: { value: 1.46, min: 0, max: Math.PI * 2, step: 0.01 },
     envBackground: { value: false },
-    copyEnvironmentSettings: button(() => {
+    copyEnvironmentSettings: button((get) => {
       copyJson('environment settings', {
-        preset,
-        blur,
-        intensity,
-        envRotation,
-        envBackground
+        preset: get('Environment.preset'),
+        blur: get('Environment.blur'),
+        intensity: get('Environment.intensity'),
+        envRotation: get('Environment.envRotation'),
+        envBackground: get('Environment.envBackground')
       });
     }, { label: 'Copy Environment Settings' })
   }, { hidden: !isDev });
@@ -156,31 +156,31 @@ export default function MechaHero() {
     floorBlur: { value: 2, min: 0, max: 12, step: 0.1 },
     floorFar: { value: 10, min: 1, max: 50, step: 0.5 },
     floorResolution: { value: 256, min: 64, max: 2048, step: 64 },
-    copyFloorSettings: button(() => {
+    copyFloorSettings: button((get) => {
       copyJson('floor settings', {
-        floorVisible,
-        floorSize,
-        floorY,
-        floorColor,
-        floorOpacity,
-        floorBlur,
-        floorFar,
-        floorResolution
+        floorVisible: get('Floor.floorVisible'),
+        floorSize: get('Floor.floorSize'),
+        floorY: get('Floor.floorY'),
+        floorColor: get('Floor.floorColor'),
+        floorOpacity: get('Floor.floorOpacity'),
+        floorBlur: get('Floor.floorBlur'),
+        floorFar: get('Floor.floorFar'),
+        floorResolution: get('Floor.floorResolution')
       });
     }, { label: 'Copy Floor Settings' })
   }, { hidden: !isDev });
 
   const postProcess = useControls('Post-Processing', {
     bloom: { value: true },
-    bloomIntensity: { value: 3.7, min: 0, max: 10, label: 'Bloom Intensity' },
+    bloomIntensity: { value: 6.5, min: 0, max: 10, label: 'Bloom Intensity' },
     bloomRadius: { value: 0.33, min: 0, max: 1, step: 0.01 },
-    bloomThreshold: { value: 0.57, min: 0, max: 2, step: 0.01 },
+    bloomThreshold: { value: 0.03, min: 0, max: 2, step: 0.01 },
 
-    brightnessContrast: { value: false },
+    brightnessContrast: { value: true },
     brightness: { value: 0, min: -1, max: 1, step: 0.01 },
-    contrast: { value: 0, min: -1, max: 1, step: 0.01 },
+    contrast: { value: 0.05, min: -1, max: 1, step: 0.01 },
 
-    chromaticAberration: { value: false },
+    chromaticAberration: { value: true },
     chromaOffsetX: { value: 0.001, min: 0, max: 0.02, step: 0.0005 },
     chromaOffsetY: { value: 0.001, min: 0, max: 0.02, step: 0.0005 },
 
@@ -206,12 +206,12 @@ export default function MechaHero() {
     gridScale: { value: 1.5, min: 0.1, max: 10, step: 0.1 },
     gridLineWidth: { value: 0.05, min: 0.01, max: 1, step: 0.01 },
 
-    noise: { value: true },
+    noise: { value: false },
     noiseOpacity: { value: 0.05, min: 0, max: 0.2 },
 
-    scanline: { value: false },
-    scanlineDensity: { value: 1.25, min: 0.1, max: 3, step: 0.05 },
-    scanlineOpacity: { value: 0.15, min: 0, max: 1, step: 0.01 },
+    scanline: { value: true },
+    scanlineDensity: { value: 1.4, min: 0.1, max: 3, step: 0.05 },
+    scanlineOpacity: { value: 0.25, min: 0, max: 1, step: 0.01 },
 
     sepia: { value: false },
     sepiaAmount: { value: 0.4, min: 0, max: 1, step: 0.01 },
@@ -222,43 +222,107 @@ export default function MechaHero() {
 
     hue: { value: 0, min: -Math.PI, max: Math.PI },
 
-    copyPostProcessingSettings: button(() => {
-      copyJson('post-processing settings', postProcess);
+    copyPostProcessingSettings: button((get) => {
+      // Get all values from the Post-Processing folder
+      const keys = [
+        'bloom', 'bloomIntensity', 'bloomRadius', 'bloomThreshold',
+        'brightnessContrast', 'brightness', 'contrast',
+        'chromaticAberration', 'chromaOffsetX', 'chromaOffsetY',
+        'depthOfField', 'focusDistance', 'focalLength', 'bokehScale',
+        'dotScreen', 'dotAngle', 'dotScale',
+        'glitch', 'glitchDelayMin', 'glitchDelayMax', 'glitchDurationMin', 'glitchDurationMax', 'glitchStrengthMin', 'glitchStrengthMax', 'glitchMode',
+        'grid', 'gridScale', 'gridLineWidth',
+        'noise', 'noiseOpacity',
+        'scanline', 'scanlineDensity', 'scanlineOpacity',
+        'sepia', 'sepiaAmount',
+        'vignette', 'vignetteOffset', 'vignetteDarkness', 'hue'
+      ];
+      const settings = {};
+      keys.forEach(k => settings[k] = get(`Post-Processing.${k}`));
+      copyJson('post-processing settings', settings);
     }, { label: 'Copy Post-Processing Settings' })
   }, { hidden: !isDev });
 
   useControls('Scene Tools', {
-    copyAllSceneSettings: button(() => {
-      copyJson('all scene settings', {
-        camera: getLiveCameraSettings(),
+    copyAllSceneSettings: button((get) => {
+      // Manually pull every folder's state using the get() helper
+      const settings = {
+        camera: {
+          cameraPos: get('Camera.cameraPos'),
+          cameraTarget: get('Camera.cameraTarget'),
+          cameraFov: get('Camera.cameraFov')
+        },
         model: {
-          modelPosition,
-          modelRotation,
-          modelScale
+          modelPosition: get('Model Transform.modelPosition'),
+          modelRotation: get('Model Transform.modelRotation'),
+          modelScale: get('Model Transform.modelScale')
         },
         lights: {
-          ambientIntensity,
-          pointIntensity,
-          pointPos,
-          pointColor
+          ambientIntensity: get('Lights.ambientIntensity'),
+          pointIntensity: get('Lights.pointIntensity'),
+          pointPos: get('Lights.pointPos'),
+          pointColor: get('Lights.pointColor')
         },
         environment: {
-          preset,
-          blur,
-          intensity
+          preset: get('Environment.preset'),
+          blur: get('Environment.blur'),
+          intensity: get('Environment.intensity'),
+          envRotation: get('Environment.envRotation'),
+          envBackground: get('Environment.envBackground')
         },
         floor: {
-          floorVisible,
-          floorSize,
-          floorY,
-          floorColor,
-          floorOpacity,
-          floorBlur,
-          floorFar,
-          floorResolution
+          floorVisible: get('Floor.floorVisible'),
+          floorSize: get('Floor.floorSize'),
+          floorY: get('Floor.floorY'),
+          floorColor: get('Floor.floorColor'),
+          floorOpacity: get('Floor.floorOpacity'),
+          floorBlur: get('Floor.floorBlur'),
+          floorFar: get('Floor.floorFar'),
+          floorResolution: get('Floor.floorResolution')
         },
-        postProcessing: postProcess
-      });
+        postProcessing: {
+          bloom: get('Post-Processing.bloom'),
+          bloomIntensity: get('Post-Processing.bloomIntensity'),
+          bloomRadius: get('Post-Processing.bloomRadius'),
+          bloomThreshold: get('Post-Processing.bloomThreshold'),
+          brightnessContrast: get('Post-Processing.brightnessContrast'),
+          brightness: get('Post-Processing.brightness'),
+          contrast: get('Post-Processing.contrast'),
+          chromaticAberration: get('Post-Processing.chromaticAberration'),
+          chromaOffsetX: get('Post-Processing.chromaOffsetX'),
+          chromaOffsetY: get('Post-Processing.chromaOffsetY'),
+          depthOfField: get('Post-Processing.depthOfField'),
+          focusDistance: get('Post-Processing.focusDistance'),
+          focalLength: get('Post-Processing.focalLength'),
+          bokehScale: get('Post-Processing.bokehScale'),
+          dotScreen: get('Post-Processing.dotScreen'),
+          dotAngle: get('Post-Processing.dotAngle'),
+          dotScale: get('Post-Processing.dotScale'),
+          glitch: get('Post-Processing.glitch'),
+          glitchDelayMin: get('Post-Processing.glitchDelayMin'),
+          glitchDelayMax: get('Post-Processing.glitchDelayMax'),
+          glitchDurationMin: get('Post-Processing.glitchDurationMin'),
+          glitchDurationMax: get('Post-Processing.glitchDurationMax'),
+          glitchStrengthMin: get('Post-Processing.glitchStrengthMin'),
+          glitchStrengthMax: get('Post-Processing.glitchStrengthMax'),
+          glitchMode: get('Post-Processing.glitchMode'),
+          grid: get('Post-Processing.grid'),
+          gridScale: get('Post-Processing.gridScale'),
+          gridLineWidth: get('Post-Processing.gridLineWidth'),
+          noise: get('Post-Processing.noise'),
+          noiseOpacity: get('Post-Processing.noiseOpacity'),
+          scanline: get('Post-Processing.scanline'),
+          scanlineDensity: get('Post-Processing.scanlineDensity'),
+          scanlineOpacity: get('Post-Processing.scanlineOpacity'),
+          sepia: get('Post-Processing.sepia'),
+          sepiaAmount: get('Post-Processing.sepiaAmount'),
+          vignette: get('Post-Processing.vignette'),
+          vignetteOffset: get('Post-Processing.vignetteOffset'),
+          vignetteDarkness: get('Post-Processing.vignetteDarkness'),
+          hue: get('Post-Processing.hue')
+        }
+      };
+      copyJson('all scene settings', settings);
     }, { label: 'Copy All Scene Settings' })
   }, { hidden: !isDev });
 
@@ -315,9 +379,9 @@ export default function MechaHero() {
           rotateSpeed={0.7}
           panSpeed={0.9}
           zoomSpeed={0.9}
-          enableRotate
-          enablePan
-          enableZoom
+          enableRotate={false}
+          enablePan={false}
+          enableZoom={false}
           screenSpacePanning
         />
 

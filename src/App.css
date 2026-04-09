@@ -185,7 +185,7 @@
 
 .layer-1 {
   filter: url(#perfect-outline);
-  opacity: 0.3;
+  opacity: 0.2;
   z-index: 3;
 }
 
@@ -198,7 +198,7 @@
 
 .layer-3 {
   filter: url(#perfect-outline-thin);
-  opacity: 0.08;
+  opacity: 0.1;
   transform: translate(24px, 24px);
   z-index: 1;
 }
