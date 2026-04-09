@@ -1,69 +1,58 @@
-import React, { useRef } from 'react';
+import React, { Suspense } from 'react';
 import { motion } from 'framer-motion';
+import { Linkedin, Twitter, Youtube } from 'lucide-react';
 import MechaHero from './components/MechaHero';
-import Header from './components/Header';
-import BentoGrid from './components/BentoGrid';
 import './App.css';
 
 function App() {
-  const scrollRef = useRef(null);
-  
-  const sections = {
-    home: useRef(null),
-    work: useRef(null),
-    tech: useRef(null),
-    tools: useRef(null),
-    about: useRef(null)
-  };
-
-  const scrollToSection = (id) => {
-    sections[id].current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <div className="app-container">
-      <Header onNavigate={scrollToSection} />
-      <div className="horizontal-reel" ref={scrollRef}>
-        {/* Slide 1: HERO */}
-        <section className="slide hero-slide" ref={sections.home}>
+    <div className="coming-soon-wrapper">
+      {/* Background outlined text */}
+      <div className="bg-text-container">
+        <h1 className="bg-text">COMING</h1>
+        <h1 className="bg-text">SOON</h1>
+      </div>
+
+      {/* 3D Canvas container */}
+      <div className="canvas-wrapper">
+        <Suspense fallback={null}>
           <MechaHero />
-          <div className="hero-content">
-            <motion.h1 
-              initial={{ opacity: 0, x: -100 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-            >
-              NAZMUL
-            </motion.h1>
-            <p className="hero-sub">[ 3D_GENERALIST | TECH_ARTIST ]</p>
-          </div>
-        </section>
-        
-        {/* Slide 2: WORK */}
-        <section className="slide work-slide" ref={sections.work}>
-          <BentoGrid />
-        </section>
-        
-        <section className="slide tech-slide" ref={sections.tech}>
-          <div className="center-content">
-            <h2>TECH_ART & SHADERS</h2>
-          </div>
-        </section>
+        </Suspense>
+      </div>
 
-        <section className="slide tool-slide" ref={sections.tools}>
-          <div className="center-content">
-            <h2>TOOLS & AUTOMATION</h2>
-          </div>
-        </section>
+      {/* Overlay UI */}
+      <div className="overlay-ui">
+        {/* Top Left: Name and Skillset */}
+        <motion.div 
+          className="top-left"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.2 }}
+        >
+          <h2 className="name">NAZMUL <span className="highlight">ISLAM</span></h2>
+          <p className="skillset">[ 3D_GENERALIST | TECH_ARTIST ]</p>
+        </motion.div>
 
-        <section className="slide about-slide" ref={sections.about}>
-          <div className="center-content">
-            <h2>COMMAND_ORIGIN: ABOUT</h2>
-          </div>
-        </section>
+        {/* Top Right: Icon Links */}
+        <motion.div 
+          className="top-right"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.3 }}
+        >
+          <a href="#" className="social-icon" aria-label="LinkedIn" target="_blank" rel="noreferrer">
+            <Linkedin size={20} />
+          </a>
+          <a href="#" className="social-icon" aria-label="X (Twitter)" target="_blank" rel="noreferrer">
+            <Twitter size={20} />
+          </a>
+          <a href="#" className="social-icon" aria-label="YouTube" target="_blank" rel="noreferrer">
+            <Youtube size={20} />
+          </a>
+        </motion.div>
       </div>
     </div>
   );
 }
 
-export default App
+export default App;

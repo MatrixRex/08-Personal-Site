@@ -1,7 +1,7 @@
 import React, { Suspense, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
-import { LevaPanel, useControls, button, useCreateStore } from 'leva';
+import { useControls, button } from 'leva';
 import {
   EffectComposer,
   Bloom,
@@ -24,7 +24,6 @@ export default function MechaHero() {
   // Scene Tweak Settings - Only active in development
   const isDev = import.meta.env.DEV;
   const controlsRef = useRef(null);
-  const levaStore = useCreateStore();
 
   const copyJson = async (label, payload) => {
     const text = JSON.stringify(payload, null, 2);
@@ -62,10 +61,10 @@ export default function MechaHero() {
       cameraFov: Number(camera.fov.toFixed(3))
     };
   };
-  
+
   const { cameraPos, cameraTarget, cameraFov } = useControls('Camera', {
-    cameraPos: { value: [6.219, 9.692, 6.466], step: 0.1 },
-    cameraTarget: { value: [-0.847, 0.673, -0.63], step: 0.1 },
+    cameraPos: { value: [4.283, 4.248, 4.576], step: 0.1 },
+    cameraTarget: { value: [-0.826, 0.753, -0.665], step: 0.1 },
     cameraFov: { value: 45, min: 10, max: 120 },
     copyCameraSettings: button(() => {
       const controls = controlsRef.current;
@@ -88,7 +87,7 @@ export default function MechaHero() {
         cameraFov: Number(camera.fov.toFixed(3))
       });
     }, { label: 'Copy Camera Settings' })
-  }, { hidden: !isDev }, { store: levaStore });
+  }, { hidden: !isDev });
 
   const { modelPosition, modelRotation, modelScale } = useControls('Model Transform', {
     modelPosition: { value: [0, 0, 0], step: 0.1 },
@@ -101,11 +100,11 @@ export default function MechaHero() {
         modelScale
       });
     }, { label: 'Copy Model Settings' })
-  }, { hidden: !isDev }, { store: levaStore });
+  }, { hidden: !isDev });
 
   const { ambientIntensity, pointIntensity, pointPos, pointColor } = useControls('Lights', {
-    ambientIntensity: { value: 1.5, min: 0, max: 10 },
-    pointIntensity: { value: 2, min: 0, max: 20 },
+    ambientIntensity: { value: 0.1, min: 0, max: 10 },
+    pointIntensity: { value: 0.5, min: 0, max: 20 },
     pointPos: { value: [10, 10, 10] },
     pointColor: '#00e5ff',
     copyLightSettings: button(() => {
@@ -116,23 +115,27 @@ export default function MechaHero() {
         pointColor
       });
     }, { label: 'Copy Light Settings' })
-  }, { hidden: !isDev }, { store: levaStore });
+  }, { hidden: !isDev });
 
-  const { preset, blur, intensity } = useControls('Environment', {
-    preset: { 
-      value: 'park', 
-      options: ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby'] 
+  const { preset, blur, intensity, envRotation, envBackground } = useControls('Environment', {
+    preset: {
+      value: 'night',
+      options: ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby']
     },
-    blur: { value: 0.8, min: 0, max: 1 },
-    intensity: { value: 1, min: 0, max: 5 },
+    blur: { value: 0, min: 0, max: 1 },
+    intensity: { value: 1.2, min: 0, max: 5 },
+    envRotation: { value: 1.17, min: 0, max: Math.PI * 2, step: 0.01 },
+    envBackground: { value: true },
     copyEnvironmentSettings: button(() => {
       copyJson('environment settings', {
         preset,
         blur,
-        intensity
+        intensity,
+        envRotation,
+        envBackground
       });
     }, { label: 'Copy Environment Settings' })
-  }, { hidden: !isDev }, { store: levaStore });
+  }, { hidden: !isDev });
 
   const {
     floorVisible,
@@ -164,7 +167,7 @@ export default function MechaHero() {
         floorResolution
       });
     }, { label: 'Copy Floor Settings' })
-  }, { hidden: !isDev }, { store: levaStore });
+  }, { hidden: !isDev });
 
   const postProcess = useControls('Post-Processing', {
     bloom: { value: true },
@@ -221,7 +224,7 @@ export default function MechaHero() {
     copyPostProcessingSettings: button(() => {
       copyJson('post-processing settings', postProcess);
     }, { label: 'Copy Post-Processing Settings' })
-  }, { hidden: !isDev }, { store: levaStore });
+  }, { hidden: !isDev });
 
   useControls('Scene Tools', {
     copyAllSceneSettings: button(() => {
@@ -256,46 +259,52 @@ export default function MechaHero() {
         postProcessing: postProcess
       });
     }, { label: 'Copy All Scene Settings' })
-  }, { hidden: !isDev }, { store: levaStore });
+  }, { hidden: !isDev });
 
   return (
-    <div style={{ width: '100vw', height: '100vh', background: 'linear-gradient(to bottom, #E1F5FE, #FAFAFA)' }}>
-      {isDev && <LevaPanel store={levaStore} flat titleBar />}
+    <div className="mecha-hero-container">
       <Canvas shadows>
         <PerspectiveCamera makeDefault position={cameraPos} fov={cameraFov} />
-        
-        <ambientLight intensity={ambientIntensity} />
+
+        <ambientLight intensity={ambientIntensity} args={[null, 11.92]} castShadow={false} />
         <pointLight position={pointPos} intensity={pointIntensity} color={pointColor} castShadow />
-        
+
         <Suspense fallback={null}>
           <group
             name="Mecha Group"
             position={modelPosition}
             rotation={modelRotation}
-            scale={modelScale}
+            scale={modelScale} castShadow={true}
           >
-            <Model />
+            <Model envMapIntensity={intensity} />
           </group>
-          
-          <Environment preset={preset} blur={blur} intensity={intensity} />
+
+          <Environment
+            preset={preset}
+            background={envBackground}
+            backgroundBlurriness={blur}
+            environmentIntensity={intensity}
+            environmentRotation={[0, envRotation, 0]}
+          />
         </Suspense>
 
         {floorVisible && (
           <ContactShadows
-            position={[0, floorY, 0]}
+            position={0}
             opacity={floorOpacity}
             scale={floorSize}
             blur={floorBlur}
             far={floorFar}
             resolution={floorResolution}
-            color={floorColor}
+            color={floorColor} castShadow={false}
           />
         )}
-        
+
         <OrbitControls
           ref={controlsRef}
           target={cameraTarget}
           autoRotate={false}
+          autoRotateSpeed={0.5}
           enableDamping
           dampingFactor={0.08}
           rotateSpeed={0.7}

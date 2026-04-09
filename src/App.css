@@ -1,80 +1,144 @@
-.app-container {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  background-color: var(--color-bg);
-}
-
-.horizontal-reel {
-  display: flex;
-  width: 500vw; /* Total width of all slides */
-  height: 100vh;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none; /* Hide for cleaner HUD look */
-}
-
-.horizontal-reel::-webkit-scrollbar {
-  display: none;
-}
-
-.slide {
-  flex-shrink: 0;
-  width: 100vw;
-  height: 100vh;
-  scroll-snap-align: start;
+.coming-soon-wrapper {
   position: relative;
+  width: 100vw;
+  height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-.hero-slide {
-  justify-content: flex-start;
-}
-
-.hero-content {
+/* 3D Canvas layer */
+.canvas-wrapper {
   position: absolute;
-  bottom: 15%;
-  left: 5%;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+}
+
+.mecha-hero-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Background outline text layer */
+.bg-text-container {
+  position: absolute;
+  z-index: 0; /* Behind 3D model */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 
-.hero-content h1 {
-  font-size: clamp(4rem, 15vw, 12rem);
-  color: var(--color-cyan);
-  line-height: 0.8;
+.bg-text {
+  font-family: var(--font-display);
+  font-size: 20vw; /* Even larger text */
   font-weight: 900;
-  text-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+  line-height: 0.85;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 3px rgba(255, 255, 255, 0.3); /* Prominent outline */
+  text-shadow: 0 0 40px rgba(0, 229, 255, 0.1); /* Subtle cyber glow behind text */
+  margin: 0;
+  letter-spacing: -0.02em;
+  user-select: none;
+  white-space: nowrap;
 }
 
-.hero-sub {
+/* Overlay UI layer (on top of 3D) */
+.overlay-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none; /* Let clicks pass through to 3D canvas */
+}
+
+/* Top Left Branding */
+.top-left {
+  position: absolute;
+  top: 40px;
+  left: 48px;
+  pointer-events: auto; /* Allow interaction if needed */
+}
+
+.top-left .name {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  color: var(--color-text-main);
+}
+
+.top-left .name .highlight {
+  color: var(--color-accent);
+}
+
+.top-left .skillset {
   font-family: var(--font-mono);
-  font-size: 1rem;
-  color: var(--color-steel);
-  margin-top: 1rem;
-  opacity: 0.8;
-  letter-spacing: 0.2rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
 }
 
-.center-content h2 {
-  font-size: 3rem;
-  font-family: var(--font-mono);
-  color: var(--color-steel);
-  opacity: 0.1;
+/* Top Right Socials */
+.top-right {
+  position: absolute;
+  top: 40px;
+  right: 48px;
+  display: flex;
+  gap: 16px;
+  pointer-events: auto; /* Allow interaction */
 }
 
-/* Mobile Responsiveness Strategy */
+.social-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--color-text-main);
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.social-icon:hover {
+  background-color: rgba(0, 229, 255, 0.1);
+  border-color: rgba(0, 229, 255, 0.4);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 229, 255, 0.15);
+}
+
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .horizontal-reel {
-    flex-direction: column;
-    width: 100vw;
-    height: auto;
-    overflow-y: auto;
-    scroll-snap-type: y mandatory;
+  .bg-text {
+    font-size: 24vw;
   }
   
-  .slide {
-    height: 100vh;
+  .top-left {
+    top: 24px;
+    left: 24px;
+  }
+  
+  .top-right {
+    top: auto;
+    bottom: 32px;
+    right: 50%;
+    transform: translateX(50%);
   }
 }

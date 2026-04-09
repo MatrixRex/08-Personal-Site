@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect, Suspense } from 'react';
 import { Float, useGLTF, useAnimations } from '@react-three/drei';
 
-const MODEL_PATH = '/models/model.glb';
+const MODEL_PATH = '/models/welcome.glb';
 
-function CustomMecha() {
+function CustomMecha({ envMapIntensity = 1 }) {
   const group = useRef();
   const { scene, animations = [] } = useGLTF(MODEL_PATH);
   const { actions } = useAnimations(animations || [], group);
@@ -18,10 +18,23 @@ function CustomMecha() {
     }
   }, [actions, animations]);
 
+  // Apply environment intensity immediately to all mesh materials
+  useEffect(() => {
+    if (scene) {
+      scene.traverse((child) => {
+        if (child.isMesh && child.material) {
+          // Keep a backup of the original materials or just override directly
+          child.material.envMapIntensity = envMapIntensity;
+          child.material.needsUpdate = true;
+        }
+      });
+    }
+  }, [scene, envMapIntensity]);
+
   return <primitive ref={group} object={scene} scale={1.5} />;
 }
 
-export default function Model() {
+export default function Model({ envMapIntensity = 1 }) {
   const meshRef = useRef();
   const [hasCustomModel, setHasCustomModel] = useState(false);
 
@@ -34,13 +47,13 @@ export default function Model() {
   }, []);
 
   return (
-    <Float speed={2} rotationIntensity={0.2} floatIntensity={0.5}>
+    <Float speed={2} rotationIntensity={0} floatIntensity={0.5}>
       <group ref={meshRef}>
-        <Suspense fallback={<PlaceholderCube />}>
+        <Suspense fallback={<PlaceholderCube envMapIntensity={envMapIntensity} />}>
           {hasCustomModel ? (
-            <CustomMecha />
+            <CustomMecha envMapIntensity={envMapIntensity} />
           ) : (
-            <PlaceholderCube />
+            <PlaceholderCube envMapIntensity={envMapIntensity} />
           )}
         </Suspense>
       </group>
@@ -49,11 +62,11 @@ export default function Model() {
 }
 
 
-function PlaceholderCube() {
+function PlaceholderCube({ envMapIntensity = 1 }) {
   return (
     <mesh>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="#00E5FF" emissive="#00E5FF" emissiveIntensity={1.5} />
+      <meshStandardMaterial color="#00E5FF" emissive="#00E5FF" emissiveIntensity={1.5} envMapIntensity={envMapIntensity} />
     </mesh>
   );
 }
