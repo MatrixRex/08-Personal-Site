@@ -48,8 +48,8 @@ export default function MechaHero() {
   };
 
   const { cameraPos, cameraTarget, cameraFov } = useControls('Camera', {
-    cameraPos: { value: [4.283, 4.248, 4.576], step: 0.1 },
-    cameraTarget: { value: [-0.826, 0.753, -0.665], step: 0.1 },
+    cameraPos: { value: [0, 0, 10], step: 0.1 },
+    cameraTarget: { value: [0, 0, 0], step: 0.1 },
     cameraFov: { value: 45, min: 10, max: 120 },
     copyCameraSettings: button(() => {
       copyJson('camera settings', settingsRef.current.camera);
@@ -188,7 +188,11 @@ export default function MechaHero() {
 
   return (
     <div className="mecha-hero-container">
-      <Canvas shadows gl={{ antialias: false, stencil: false }}>
+      <Canvas 
+        shadows 
+        gl={{ antialias: false, stencil: false }}
+        style={{ width: '100%', height: '100%' }}
+      >
         <PerspectiveCamera makeDefault position={cameraPos} fov={cameraFov} />
         
         <ambientLight intensity={ambientIntensity} />
