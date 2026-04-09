@@ -278,66 +278,6 @@ export default function MechaHero() {
           </group>
           
           <Environment preset={preset} blur={blur} intensity={intensity} />
-          
-          <EffectComposer disableNormalPass>
-            {postProcess.bloom && (
-              <Bloom 
-                luminanceThreshold={postProcess.bloomThreshold}
-                mipmapBlur 
-                intensity={postProcess.bloomIntensity} 
-                radius={postProcess.bloomRadius}
-              />
-            )}
-            {postProcess.brightnessContrast && (
-              <BrightnessContrast brightness={postProcess.brightness} contrast={postProcess.contrast} />
-            )}
-            {postProcess.chromaticAberration && (
-              <ChromaticAberration
-                offset={[postProcess.chromaOffsetX, postProcess.chromaOffsetY]}
-                blendFunction={BlendFunction.NORMAL}
-              />
-            )}
-            {postProcess.depthOfField && (
-              <DepthOfField
-                focusDistance={postProcess.focusDistance}
-                focalLength={postProcess.focalLength}
-                bokehScale={postProcess.bokehScale}
-              />
-            )}
-            {postProcess.dotScreen && (
-              <DotScreen angle={postProcess.dotAngle} scale={postProcess.dotScale} />
-            )}
-            {postProcess.glitch && (
-              <Glitch
-                delay={[postProcess.glitchDelayMin, postProcess.glitchDelayMax]}
-                duration={[postProcess.glitchDurationMin, postProcess.glitchDurationMax]}
-                strength={[postProcess.glitchStrengthMin, postProcess.glitchStrengthMax]}
-                mode={
-                  postProcess.glitchMode === 'constant'
-                    ? GlitchMode.CONSTANT_MILD
-                    : postProcess.glitchMode === 'disabled'
-                      ? GlitchMode.DISABLED
-                      : GlitchMode.SPORADIC
-                }
-              />
-            )}
-            {postProcess.grid && (
-              <Grid scale={postProcess.gridScale} lineWidth={postProcess.gridLineWidth} />
-            )}
-            {postProcess.noise && <Noise opacity={postProcess.noiseOpacity} />}
-            {postProcess.scanline && (
-              <Scanline density={postProcess.scanlineDensity} opacity={postProcess.scanlineOpacity} />
-            )}
-            {postProcess.sepia && <Sepia intensity={postProcess.sepiaAmount} />}
-            {postProcess.vignette && (
-              <Vignette
-                eskil={false}
-                offset={postProcess.vignetteOffset}
-                darkness={postProcess.vignetteDarkness}
-              />
-            )}
-            <HueSaturation hue={postProcess.hue} saturation={0} />
-          </EffectComposer>
         </Suspense>
 
         {floorVisible && (

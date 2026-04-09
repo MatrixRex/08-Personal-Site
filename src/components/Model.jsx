@@ -5,12 +5,12 @@ const MODEL_PATH = '/models/model.glb';
 
 function CustomMecha() {
   const group = useRef();
-  const { scene, animations } = useGLTF(MODEL_PATH);
-  const { actions } = useAnimations(animations, group);
+  const { scene, animations = [] } = useGLTF(MODEL_PATH);
+  const { actions } = useAnimations(animations || [], group);
 
   useEffect(() => {
     // Play the first animation if it exists
-    if (animations.length > 0) {
+    if (animations && animations.length > 0) {
       const firstAction = actions[Object.keys(actions)[0]];
       if (firstAction) {
         firstAction.reset().fadeIn(0.5).play();
