@@ -1,6 +1,7 @@
-import React, { Suspense, useRef, useEffect } from 'react';
-import { Canvas, useThree } from '@react-three/fiber';
-import { Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
+import React, { Suspense, useRef } from 'react';
+import * as THREE from 'three';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
 import { useControls, button } from 'leva';
 import {
   EffectComposer,
@@ -20,22 +21,10 @@ import {
 import { BlendFunction, GlitchMode } from 'postprocessing';
 import Model from './Model';
 
-const SceneSync = ({ target }) => {
-  const { camera } = useThree();
-  useEffect(() => {
-    if (camera && target) {
-      camera.lookAt(...target);
-    }
-  }, [camera, target]);
-  return null;
-};
-
 export default function MechaHero() {
   // Scene Tweak Settings - Only active in development
   const isDev = import.meta.env.DEV;
-  console.log('MechaHero Rendering', { isDev });
-
-  const settingsRef = useRef({});
+  const controlsRef = useRef(null);
 
   const copyJson = async (label, payload) => {
     const text = JSON.stringify(payload, null, 2);
@@ -47,47 +36,107 @@ export default function MechaHero() {
     }
   };
 
+  const getLiveCameraSettings = () => {
+    const controls = controlsRef.current;
+    const camera = controls?.object;
+    const target = controls?.target;
+    if (!camera || !target) {
+      return {
+        cameraPos,
+        cameraTarget,
+        cameraFov
+      };
+    }
+
+    return {
+      cameraPos: [
+        Number(camera.position.x.toFixed(3)),
+        Number(camera.position.y.toFixed(3)),
+        Number(camera.position.z.toFixed(3))
+      ],
+      cameraTarget: [
+        Number(target.x.toFixed(3)),
+        Number(target.y.toFixed(3)),
+        Number(target.z.toFixed(3))
+      ],
+      cameraFov: Number(camera.fov.toFixed(3))
+    };
+  };
+
   const { cameraPos, cameraTarget, cameraFov } = useControls('Camera', {
-    cameraPos: { value: [0, 0, 10], step: 0.1 },
-    cameraTarget: { value: [0, 0, 0], step: 0.1 },
+    cameraPos: { value: [4.581, 4.274, 4.25], step: 0.1 },
+    cameraTarget: { value: [-0.826, 0.753, -0.665], step: 0.1 },
     cameraFov: { value: 45, min: 10, max: 120 },
     copyCameraSettings: button(() => {
-      copyJson('camera settings', settingsRef.current.camera);
+      const controls = controlsRef.current;
+      const camera = controls?.object;
+      const target = controls?.target;
+
+      if (!camera || !target) return;
+
+      copyJson('camera settings', {
+        cameraPos: [
+          Number(camera.position.x.toFixed(3)),
+          Number(camera.position.y.toFixed(3)),
+          Number(camera.position.z.toFixed(3))
+        ],
+        cameraTarget: [
+          Number(target.x.toFixed(3)),
+          Number(target.y.toFixed(3)),
+          Number(target.z.toFixed(3))
+        ],
+        cameraFov: Number(camera.fov.toFixed(3))
+      });
     }, { label: 'Copy Camera Settings' })
-  }, { hidden: !isDev, collapsed: true });
+  }, { hidden: !isDev });
 
   const { modelPosition, modelRotation, modelScale } = useControls('Model Transform', {
     modelPosition: { value: [0, 0, 0], step: 0.1 },
     modelRotation: { value: [0, 0, 0], step: 0.05 },
     modelScale: { value: 1, min: 0.1, max: 10, step: 0.1 },
     copyModelSettings: button(() => {
-      copyJson('model settings', settingsRef.current.model);
+      copyJson('model settings', {
+        modelPosition,
+        modelRotation,
+        modelScale
+      });
     }, { label: 'Copy Model Settings' })
-  }, { hidden: !isDev, collapsed: true });
+  }, { hidden: !isDev });
 
   const { ambientIntensity, pointIntensity, pointPos, pointColor } = useControls('Lights', {
-    ambientIntensity: { value: 0, min: 0, max: 2, step: 0.01 },
-    pointIntensity: { value: 0.2, min: 0, max: 10, step: 0.1 },
-    pointPos: { value: [-2.3, 2.7, -3.8] },
-    pointColor: '#00e5ff',
+    ambientIntensity: { value: 0.1, min: 0, max: 10 },
+    pointIntensity: { value: 1.3, min: 0, max: 20 },
+    pointPos: { value: [-2.6, 3.5, -3.4] },
+    pointColor: '#64339c',
     copyLightSettings: button(() => {
-      copyJson('light settings', settingsRef.current.lights);
+      copyJson('light settings', {
+        ambientIntensity,
+        pointIntensity,
+        pointPos,
+        pointColor
+      });
     }, { label: 'Copy Light Settings' })
-  }, { hidden: !isDev, collapsed: true });
+  }, { hidden: !isDev });
 
   const { preset, blur, intensity, envRotation, envBackground } = useControls('Environment', {
     preset: {
-      value: 'night',
+      value: 'forest',
       options: ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby']
     },
     blur: { value: 0, min: 0, max: 1 },
-    intensity: { value: 1.2, min: 0, max: 5 },
+    intensity: { value: 0.4, min: 0, max: 5 },
     envRotation: { value: 1.17, min: 0, max: Math.PI * 2, step: 0.01 },
     envBackground: { value: false },
     copyEnvironmentSettings: button(() => {
-      copyJson('environment settings', settingsRef.current.environment);
+      copyJson('environment settings', {
+        preset,
+        blur,
+        intensity,
+        envRotation,
+        envBackground
+      });
     }, { label: 'Copy Environment Settings' })
-  }, { hidden: !isDev, collapsed: true });
+  }, { hidden: !isDev });
 
   const {
     floorVisible,
@@ -108,21 +157,30 @@ export default function MechaHero() {
     floorFar: { value: 10, min: 1, max: 50, step: 0.5 },
     floorResolution: { value: 256, min: 64, max: 2048, step: 64 },
     copyFloorSettings: button(() => {
-      copyJson('floor settings', settingsRef.current.floor);
+      copyJson('floor settings', {
+        floorVisible,
+        floorSize,
+        floorY,
+        floorColor,
+        floorOpacity,
+        floorBlur,
+        floorFar,
+        floorResolution
+      });
     }, { label: 'Copy Floor Settings' })
-  }, { hidden: !isDev, collapsed: true });
+  }, { hidden: !isDev });
 
   const postProcess = useControls('Post-Processing', {
     bloom: { value: true },
-    bloomIntensity: { value: 2.7, min: 0, max: 10 },
-    bloomRadius: { value: 0.4, min: 0, max: 1, step: 0.01 },
-    bloomThreshold: { value: 0.37, min: 0, max: 2, step: 0.01 },
+    bloomIntensity: { value: 3.7, min: 0, max: 10, label: 'Bloom Intensity' },
+    bloomRadius: { value: 0.33, min: 0, max: 1, step: 0.01 },
+    bloomThreshold: { value: 0.57, min: 0, max: 2, step: 0.01 },
 
-    brightnessContrast: { value: true },
+    brightnessContrast: { value: false },
     brightness: { value: 0, min: -1, max: 1, step: 0.01 },
-    contrast: { value: 0.05, min: -1, max: 1, step: 0.01 },
+    contrast: { value: 0, min: -1, max: 1, step: 0.01 },
 
-    chromaticAberration: { value: true },
+    chromaticAberration: { value: false },
     chromaOffsetX: { value: 0.001, min: 0, max: 0.02, step: 0.0005 },
     chromaOffsetY: { value: 0.001, min: 0, max: 0.02, step: 0.0005 },
 
@@ -148,11 +206,11 @@ export default function MechaHero() {
     gridScale: { value: 1.5, min: 0.1, max: 10, step: 0.1 },
     gridLineWidth: { value: 0.05, min: 0.01, max: 1, step: 0.01 },
 
-    noise: { value: false },
+    noise: { value: true },
     noiseOpacity: { value: 0.05, min: 0, max: 0.2 },
 
-    scanline: { value: true },
-    scanlineDensity: { value: 1.2, min: 0.1, max: 3, step: 0.05 },
+    scanline: { value: false },
+    scanlineDensity: { value: 1.25, min: 0.1, max: 3, step: 0.05 },
     scanlineOpacity: { value: 0.15, min: 0, max: 1, step: 0.01 },
 
     sepia: { value: false },
@@ -165,38 +223,56 @@ export default function MechaHero() {
     hue: { value: 0, min: -Math.PI, max: Math.PI },
 
     copyPostProcessingSettings: button(() => {
-      copyJson('post-processing settings', settingsRef.current.postProcessing);
+      copyJson('post-processing settings', postProcess);
     }, { label: 'Copy Post-Processing Settings' })
-  }, { hidden: !isDev, collapsed: true });
-
-  // Update settingsRef every render with the latest values from all useControls calls
-  settingsRef.current = {
-    camera: { cameraPos, cameraTarget, cameraFov },
-    model: { modelPosition, modelRotation, modelScale },
-    lights: { ambientIntensity, pointIntensity, pointPos, pointColor },
-    environment: { preset, blur, intensity, envRotation, envBackground },
-    floor: { floorVisible, floorSize, floorY, floorColor, floorOpacity, floorBlur, floorFar, floorResolution },
-    postProcessing: postProcess
-  };
+  }, { hidden: !isDev });
 
   useControls('Scene Tools', {
     copyAllSceneSettings: button(() => {
-      copyJson('all scene settings', settingsRef.current);
+      copyJson('all scene settings', {
+        camera: getLiveCameraSettings(),
+        model: {
+          modelPosition,
+          modelRotation,
+          modelScale
+        },
+        lights: {
+          ambientIntensity,
+          pointIntensity,
+          pointPos,
+          pointColor
+        },
+        environment: {
+          preset,
+          blur,
+          intensity
+        },
+        floor: {
+          floorVisible,
+          floorSize,
+          floorY,
+          floorColor,
+          floorOpacity,
+          floorBlur,
+          floorFar,
+          floorResolution
+        },
+        postProcessing: postProcess
+      });
     }, { label: 'Copy All Scene Settings' })
-  }, { hidden: !isDev, collapsed: true });
-
+  }, { hidden: !isDev });
 
   return (
     <div className="mecha-hero-container">
       <Canvas 
-        shadows 
+        shadows={{ type: THREE.PCFShadowMap }} 
         gl={{ antialias: false, stencil: false }}
         style={{ width: '100%', height: '100%' }}
       >
         <PerspectiveCamera makeDefault position={cameraPos} fov={cameraFov} />
-        
-        <ambientLight intensity={ambientIntensity} />
-        <pointLight position={pointPos} intensity={pointIntensity} color={pointColor} castShadow decay={0} />
+
+        <ambientLight intensity={ambientIntensity} args={[null, 11.92]} castShadow={false} />
+        <pointLight position={pointPos} intensity={pointIntensity} color={pointColor} castShadow />
 
         <Suspense fallback={null}>
           <group
@@ -229,7 +305,21 @@ export default function MechaHero() {
           />
         )}
 
-        <SceneSync target={cameraTarget} />
+        <OrbitControls
+          ref={controlsRef}
+          target={cameraTarget}
+          autoRotate={false}
+          autoRotateSpeed={0.5}
+          enableDamping
+          dampingFactor={0.08}
+          rotateSpeed={0.7}
+          panSpeed={0.9}
+          zoomSpeed={0.9}
+          enableRotate
+          enablePan
+          enableZoom
+          screenSpacePanning
+        />
 
         <EffectComposer multisampling={0}>
           {postProcess.bloom && (

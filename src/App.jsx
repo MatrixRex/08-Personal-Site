@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FaLinkedin, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { Leva } from 'leva';
 import MechaHero from './components/MechaHero';
+import TerminalLog from './components/TerminalLog';
 import './App.css';
 
 function App() {
@@ -14,39 +15,25 @@ function App() {
   });
 
   useEffect(() => {
-    const updateTimes = () => {
-      const formatTime = (timeZone) => {
-        return new Intl.DateTimeFormat('en-GB', {
-          timeZone,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        }).format(new Date());
-      };
-
+    const updateClocks = () => {
+      const now = new Date();
       setTimes({
-        dhaka: formatTime('Asia/Dhaka'),
-        newyork: formatTime('America/New_York'),
-        dubai: formatTime('Asia/Dubai'),
-        milis: Date.now().toString()
+        dhaka: new Intl.DateTimeFormat('en-US', {
+          timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+        }).format(now),
+        newyork: new Intl.DateTimeFormat('en-US', {
+          timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+        }).format(now),
+        dubai: new Intl.DateTimeFormat('en-US', {
+          timeZone: 'Asia/Dubai', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+        }).format(now),
+        milis: 'ACTV'
       });
     };
 
-    updateTimes();
-    const clockInterval = setInterval(updateTimes, 1000);
-    
-    const milisInterval = setInterval(() => {
-      setTimes(prev => ({
-        ...prev,
-        milis: Date.now().toString()
-      }));
-    }, 40);
-
-    return () => {
-      clearInterval(clockInterval);
-      clearInterval(milisInterval);
-    };
+    updateClocks();
+    const interval = setInterval(updateClocks, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -161,24 +148,17 @@ function App() {
           </div>
         </motion.div>
 
-        {/* Bottom Clocks */}
-        <div className="clock-section">
-          <motion.div className="clock-item" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-            <span className="time">{times.dhaka}</span>
-            <span className="city">DHAKA</span>
-            <p className="address">REX HQ / BANGLADESH</p>
-          </motion.div>
-          <motion.div className="clock-item" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
-            <span className="time">{times.newyork}</span>
-            <span className="city">NEW YORK</span>
-            <p className="address">TERMINAL 4 / USA</p>
-          </motion.div>
-          <motion.div className="clock-item" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}>
-            <span className="time">{times.dubai}</span>
-            <span className="city">DUBAI</span>
-            <p className="address">GATEWAY / UAE</p>
-          </motion.div>
-        </div>
+        {/* Footer Info Section */}
+        <motion.div 
+          className="terminal-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
+        >
+          <TerminalLog title="ENGINE_PIPELINE" prefix="SYS_A >" frequency={3000} />
+          <TerminalLog title="RENDER_THREAD" prefix="GPU_B >" frequency={1500} />
+          <TerminalLog title="ASSET_FETCHER" prefix="NET_C >" frequency={4500} />
+        </motion.div>
 
         {/* Social Right (Floating) */}
         <div className="social-sidebar">
