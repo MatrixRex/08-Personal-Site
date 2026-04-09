@@ -1,8 +1,8 @@
-name: Deploy Master
+name: Deploy Main
 on:
   push:
     branches:
-      - master
+      - main
 
 permissions:
   contents: write
