@@ -9,7 +9,8 @@ function App() {
   const [times, setTimes] = useState({
     dhaka: '',
     newyork: '',
-    dubai: ''
+    dubai: '',
+    milis: ''
   });
 
   useEffect(() => {
@@ -27,13 +28,25 @@ function App() {
       setTimes({
         dhaka: formatTime('Asia/Dhaka'),
         newyork: formatTime('America/New_York'),
-        dubai: formatTime('Asia/Dubai')
+        dubai: formatTime('Asia/Dubai'),
+        milis: Date.now().toString()
       });
     };
 
     updateTimes();
-    const interval = setInterval(updateTimes, 1000);
-    return () => clearInterval(interval);
+    const clockInterval = setInterval(updateTimes, 1000);
+    
+    const milisInterval = setInterval(() => {
+      setTimes(prev => ({
+        ...prev,
+        milis: Date.now().toString()
+      }));
+    }, 40);
+
+    return () => {
+      clearInterval(clockInterval);
+      clearInterval(milisInterval);
+    };
   }, []);
 
   return (
@@ -100,7 +113,7 @@ function App() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <span className="label">INFO & CREDITS</span>
+            <span className="label">LAUNCHING SOON</span>
           </motion.div>
           <motion.div 
             className="info-block glass disabled"
@@ -108,7 +121,7 @@ function App() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6 }}
           >
-            <span className="label muted">LAUNCH CAMPAIGN GBL_M</span>
+            <span className="label muted">GLOBAL RELEASE V1.0.0</span>
           </motion.div>
         </div>
 
@@ -121,19 +134,30 @@ function App() {
         >
           <div className="media-left">
             <div className="media-indicator active"></div>
-            <span className="media-status">PAUSE</span>
+            <span className="media-status">EXECUTING</span>
           </div>
           <div className="media-progress">
-            <motion.div 
-              className="progress-track"
-              initial={{ width: "10%" }}
-              animate={{ width: "60%" }}
-              transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-            ></motion.div>
+            <div className="progress-stripe-container">
+              <div className="scrolling-stripes"></div>
+            </div>
           </div>
           <div className="media-right">
-            <span className="timestamp">04:20:69</span>
-            <span className="sound">SOUND <span className="highlight">ON</span></span>
+            <div className="timestamp-container">
+              <div className="fake-milis all-reels">
+                {[...Array(13)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="mili-reel"
+                    style={{ animationDuration: `${0.05 * Math.pow(1.6, 12 - i)}s` }}
+                  >
+                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n, idx) => (
+                      <span key={idx}>{n}</span>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <span className="sound">PRODUCTION <span className="highlight">ACTIVE</span></span>
           </div>
         </motion.div>
 

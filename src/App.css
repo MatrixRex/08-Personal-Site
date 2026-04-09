@@ -267,6 +267,12 @@
   height: 8px;
   background: var(--color-accent);
   box-shadow: 0 0 10px var(--color-accent);
+  animation: indicator-pulse 2s ease-in-out infinite;
+}
+
+@keyframes indicator-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px var(--color-accent); }
+  50% { opacity: 0.4; transform: scale(0.9); box-shadow: 0 0 2px var(--color-accent); }
 }
 
 .media-status {
@@ -278,26 +284,85 @@
 
 .media-progress {
   flex-grow: 1;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
   position: relative;
 }
 
-.progress-track {
-  position: absolute;
-  width: 30%;
+.progress-stripe-container {
+  width: 100%;
+  height: 6px;
+  background: transparent;
+  overflow: hidden;
+  position: relative;
+  
+}
+
+.scrolling-stripes {
+  width: 200%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.5);
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.3) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  animation: stripe-scroll 0.8s linear infinite;
+}
+
+@keyframes stripe-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-28px); /* Matches pattern repeat */ }
 }
 
 .media-right {
   display: flex;
+  align-items: center; /* Center vertically */
   gap: 20px;
   font-family: var(--font-mono);
   font-size: 0.75rem;
 }
 
-.timestamp { opacity: 0.6; }
+.timestamp-container {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-accent);
+  min-width: 110px;
+  overflow: hidden;
+  opacity: 0.8;
+}
+
+.fake-milis.all-reels {
+  display: flex;
+  gap: 1px;
+  height: 0.75rem;
+  overflow: hidden;
+}
+
+.mili-reel {
+  display: flex;
+  flex-direction: column;
+  animation: reel-step steps(10) infinite;
+  will-change: transform;
+}
+
+.mili-reel span {
+  height: 0.75rem;
+  line-height: 0.75rem;
+  display: block;
+  text-align: center;
+  width: 0.5rem;
+}
+
+@keyframes reel-step {
+  from { transform: translateY(0); }
+  to { transform: translateY(-7.5rem); }
+}
+
+.sound {
+  white-space: nowrap;
+}
 
 .sound .highlight {
   color: #a8ff00;
