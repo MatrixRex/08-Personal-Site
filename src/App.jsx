@@ -79,6 +79,19 @@ function App() {
 
       {/* Background outlined text */}
       <div className="bg-text-container">
+        <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+          <defs>
+            <filter id="perfect-outline">
+              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="1.5"/>
+              <feComposite in="expanded" in2="SourceAlpha" operator="out" />
+            </filter>
+            <filter id="perfect-outline-thin">
+              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="1"/>
+              <feComposite in="expanded" in2="SourceAlpha" operator="out" />
+            </filter>
+          </defs>
+        </svg>
+
         <div className="bg-text-group">
           <svg className="bg-text-svg" viewBox="0 0 1000 200">
             <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3">COMING</text>
