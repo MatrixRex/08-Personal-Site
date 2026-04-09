@@ -1,12 +1,14 @@
 import React, { Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { Linkedin, Twitter, Youtube } from 'lucide-react';
+import { FaLinkedin, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { Leva } from 'leva';
 import MechaHero from './components/MechaHero';
 import './App.css';
 
 function App() {
   return (
     <div className="coming-soon-wrapper">
+      <Leva collapsed />
       {/* Background outlined text */}
       <div className="bg-text-container">
         <h1 className="bg-text">COMING</h1>
@@ -41,13 +43,13 @@ function App() {
           transition={{ duration: 1, delay: 0.3 }}
         >
           <a href="#" className="social-icon" aria-label="LinkedIn" target="_blank" rel="noreferrer">
-            <Linkedin size={20} />
+            <FaLinkedin size={20} />
           </a>
           <a href="#" className="social-icon" aria-label="X (Twitter)" target="_blank" rel="noreferrer">
-            <Twitter size={20} />
+            <FaTwitter size={20} />
           </a>
           <a href="#" className="social-icon" aria-label="YouTube" target="_blank" rel="noreferrer">
-            <Youtube size={20} />
+            <FaYoutube size={20} />
           </a>
         </motion.div>
       </div>

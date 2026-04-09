@@ -36,18 +36,18 @@
 }
 
 .bg-text {
-  font-family: var(--font-display);
+  font-family: var(--font-cyber);
   font-size: 20vw; /* Even larger text */
   font-weight: 900;
   line-height: 0.85;
   text-transform: uppercase;
-  color: transparent;
-  -webkit-text-stroke: 3px rgba(255, 255, 255, 0.3); /* Prominent outline */
+  color: white;
   text-shadow: 0 0 40px rgba(0, 229, 255, 0.1); /* Subtle cyber glow behind text */
   margin: 0;
   letter-spacing: -0.02em;
   user-select: none;
   white-space: nowrap;
+  transform: skewX(-8deg); /* Slanted look */
 }
 
 /* Overlay UI layer (on top of 3D) */
