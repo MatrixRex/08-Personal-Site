@@ -36,6 +36,19 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      // Offset from center, sensitivity adjusted for "slight" movement
+      const x = (e.clientX - window.innerWidth / 2) / 40;
+      const y = (e.clientY - window.innerHeight / 2) / 40;
+      setMousePos({ x, y });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
     <div className="coming-soon-wrapper">
       <Leva collapsed />
@@ -87,14 +100,28 @@ function App() {
               <feFlood floodColor="white" result="color"/>
               <feComposite in="color" in2="outline" operator="in"/>
             </filter>
+            <filter id="perfect-outline-thin" x="-20%" y="-20%" width="140%" height="140%">
+              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="0.6"/>
+              <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outline"/>
+              <feFlood floodColor="white" result="color"/>
+              <feComposite in="color" in2="outline" operator="in"/>
+            </filter>
           </defs>
         </svg>        <div className="bg-text-group">
           <svg className="bg-text-svg" viewBox="0 0 1000 200">
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3" 
+              style={{ transform: `translate(${-mousePos.x * 1.5}px, ${-mousePos.y * 1.5}px)` }}>COMING</text>
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2"
+              style={{ transform: `translate(${-mousePos.x * 0.8}px, ${-mousePos.y * 0.8}px)` }}>COMING</text>
             <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">COMING</text>
           </svg>
         </div>
         <div className="bg-text-group">
           <svg className="bg-text-svg" viewBox="0 0 1000 200">
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3"
+              style={{ transform: `translate(${-mousePos.x * 1.5}px, ${-mousePos.y * 1.5}px)` }}>SOON</text>
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2"
+              style={{ transform: `translate(${-mousePos.x * 0.8}px, ${-mousePos.y * 0.8}px)` }}>SOON</text>
             <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">SOON</text>
           </svg>
         </div>

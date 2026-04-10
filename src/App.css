@@ -198,15 +198,15 @@
 
 .layer-2 {
   filter: url(#perfect-outline-thin);
+  fill: #fff;
   opacity: 0.15;
-  transform: translate(12px, 12px);
   z-index: 2;
 }
 
 .layer-3 {
   filter: url(#perfect-outline-thin);
+  fill: #fff;
   opacity: 0.1;
-  transform: translate(24px, 24px);
   z-index: 1;
 }
 
