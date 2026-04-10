@@ -1,6 +1,7 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { FaLinkedin, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { Leva } from 'leva';
 import MechaHero from './components/MechaHero';
 import TerminalLog from './components/TerminalLog';
@@ -273,10 +274,42 @@ function App() {
 
         {/* Social Right (Floating) */}
         <div className="social-sidebar">
-          <a href="#" className="social-link" aria-label="LinkedIn"><FaLinkedin /></a>
-          <a href="#" className="social-link" aria-label="X"><FaTwitter /></a>
-          <a href="#" className="social-link" aria-label="YouTube"><FaYoutube /></a>
+          <div className="social-item">
+            <div className="social-bars">
+              <div className="bar-thinner"></div>
+              <div className="bar-thicker"></div>
+            </div>
+            <a href="#" className="social-link" aria-label="LinkedIn">
+              <span className="social-label">LINKEDIN</span>
+              <FaLinkedin />
+            </a>
+          </div>
+
+          <div className="social-item">
+            <div className="social-bars">
+              <div className="bar-thinner"></div>
+              <div className="bar-thicker"></div>
+            </div>
+            <a href="#" className="social-link" aria-label="X">
+              <span className="social-label">X (TWITTER)</span>
+              <FaXTwitter />
+            </a>
+          </div>
+
+          <div className="social-item">
+            <div className="social-bars">
+              <div className="bar-thinner"></div>
+              <div className="bar-thicker"></div>
+            </div>
+            <a href="#" className="social-link" aria-label="YouTube">
+              <span className="social-label">YOUTUBE</span>
+              <FaYoutube />
+            </a>
+          </div>
         </div>
+
+
+
       </div>
     </div>
   );

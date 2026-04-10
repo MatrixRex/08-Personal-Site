@@ -520,49 +520,188 @@
   }
 }
 
-/* Social Sidebar */
+/* Social Sidebar - Advanced Tech Style */
 .social-sidebar {
   position: absolute;
-  right: 40px;
+  right: 0;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 15px;
   pointer-events: auto;
   z-index: 100;
+  align-items: flex-end;
+  counter-reset: social-counter;
+}
+
+.social-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* Decorative Slanted Bars - Outside the link area */
+.social-bars {
+  position: absolute;
+  right: 105px;
+  top: 0;
+  height: 48px;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto; /* Allow bars to trigger hover */
+  z-index: 5;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+
+
+.bar-thicker, .bar-thinner {
+  height: 100%;
+  background: var(--color-accent);
+  opacity: 0.15;
+  transition: all 0.4s ease;
+  transform: skewX(-32deg);
+  transform-origin: bottom;
+}
+
+
+.bar-thicker { width: 5px; }
+.bar-thinner { width: 2px; }
+
+.social-item:hover .bar-thicker {
+  opacity: 1;
+  box-shadow: 0 0 15px var(--color-accent);
+}
+
+.social-item:hover .bar-thinner {
+  opacity: 0.6;
+  box-shadow: 0 0 10px var(--color-accent);
 }
 
 .social-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   color: #fff;
-  opacity: 0.3;
-  font-size: 1.1rem;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: none;
+  padding: 14px 24px;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  width: 95px;
+  overflow: hidden;
+  position: relative;
+  clip-path: polygon(30px 0, 100% 0, 100% 100%, 0% 100%);
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-.social-link:hover {
-  opacity: 1;
-  transform: translateX(-10px) scale(1.2);
+.social-link::before {
+  counter-increment: social-counter;
+  content: "0" counter(social-counter);
+  position: absolute;
+  left: 30px;
+  top: 20%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
   color: var(--color-accent);
+  opacity: 0.8;
+  transition: all 0.3s;
+}
+
+.social-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  white-space: nowrap;
+  margin-right: 0;
+  color: #fff;
+}
+
+.social-link svg {
+  font-size: 1.2rem;
+  opacity: 0.4;
+  transition: all 0.3s ease;
+  min-width: 24px;
+}
+
+/* Hover States - Triggered by the parent container for unified motion */
+.social-item:hover .social-link {
+  width: 220px;
+  background: linear-gradient(90deg, rgba(0, 229, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-color: rgba(0, 229, 255, 0.4);
+  border-left: 2px solid var(--color-accent);
+  padding-right: 30px;
+}
+
+.social-item:hover .social-label {
+  opacity: 1;
+  transform: translateX(0);
+  margin-right: 20px;
+}
+
+.social-item:hover svg {
+  opacity: 1;
+  color: var(--color-accent);
+  transform: scale(1.15) rotate(-5deg);
+  filter: drop-shadow(0 0 8px var(--color-accent));
+}
+
+.social-item:hover .social-bars {
+  right: 230px; /* Adjusted to follow expanded link (220px + 10px buffer) */
 }
 
 /* Responsive adjustments */
+
 @media (max-width: 900px) {
   .main-header {
     max-width: 90%;
   }
-  .clock-section {
+  .terminal-section {
     gap: 30px;
   }
   .info-grid {
     flex-wrap: wrap;
   }
   .social-sidebar {
-    position: relative;
-    right: auto;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
     top: auto;
     transform: none;
     flex-direction: row;
-    margin-top: 30px;
+    align-items: center;
+  }
+  
+  .social-bars {
+    display: none;
+  }
+  
+  .social-link {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    justify-content: center;
+    clip-path: none;
+    border-radius: 4px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .social-link:hover {
+    width: 50px;
+  }
+  
+  .social-label, .social-link::before {
+    display: none;
   }
 }
+
+
