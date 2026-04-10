@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, Suspense } from 'react';
 import { Float, useGLTF, useAnimations } from '@react-three/drei';
 
-const MODEL_PATH = '/models/welcome.glb';
+const MODEL_PATH = `${import.meta.env.BASE_URL}models/welcome.glb`;
 
 function CustomMecha({ envMapIntensity = 1 }) {
   const group = useRef();
