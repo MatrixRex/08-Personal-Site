@@ -279,7 +279,7 @@ function App() {
               <div className="bar-thinner"></div>
               <div className="bar-thicker"></div>
             </div>
-            <a href="#" className="social-link" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/in/nazmul-islam-031446182/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">
               <span className="social-label">LINKEDIN</span>
               <FaLinkedin />
             </a>
@@ -290,7 +290,7 @@ function App() {
               <div className="bar-thinner"></div>
               <div className="bar-thicker"></div>
             </div>
-            <a href="#" className="social-link" aria-label="X">
+            <a href="https://x.com/matrixalter05" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="X">
               <span className="social-label">X (TWITTER)</span>
               <FaXTwitter />
             </a>
@@ -301,12 +301,13 @@ function App() {
               <div className="bar-thinner"></div>
               <div className="bar-thicker"></div>
             </div>
-            <a href="#" className="social-link" aria-label="YouTube">
+            <a href="https://www.youtube.com/@MatrixRex05" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="YouTube">
               <span className="social-label">YOUTUBE</span>
               <FaYoutube />
             </a>
           </div>
         </div>
+
 
 
 
