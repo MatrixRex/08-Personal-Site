@@ -49,24 +49,13 @@ export default function Model({ envMapIntensity = 1 }) {
   return (
     <Float speed={2} rotationIntensity={0} floatIntensity={0.5}>
       <group ref={meshRef}>
-        <Suspense fallback={<PlaceholderCube envMapIntensity={envMapIntensity} />}>
+        <Suspense fallback={null}>
           {hasCustomModel ? (
             <CustomMecha envMapIntensity={envMapIntensity} />
-          ) : (
-            <PlaceholderCube envMapIntensity={envMapIntensity} />
-          )}
+          ) : null}
         </Suspense>
       </group>
     </Float>
   );
 }
 
-
-function PlaceholderCube({ envMapIntensity = 1 }) {
-  return (
-    <mesh>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="#00E5FF" emissive="#00E5FF" emissiveIntensity={1.5} envMapIntensity={envMapIntensity} />
-    </mesh>
-  );
-}
