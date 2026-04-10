@@ -77,37 +77,18 @@ function App() {
         </motion.div>
       </header>
 
-      {/* Background outlined text */}
-      <div className="bg-text-container">
-        <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-          <defs>
-            <filter id="perfect-outline">
-              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="1"/>
-              <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outline"/>
-              <feFlood floodColor="white" result="color"/>
-              <feComposite in="color" in2="outline" operator="in"/>
-            </filter>
-            <filter id="perfect-outline-thin">
-              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius=".8"/>
-              <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outline"/>
-              <feFlood floodColor="white" result="color"/>
-              <feComposite in="color" in2="outline" operator="in"/>
-            </filter>
-          </defs>
-        </svg>
+      {/* Background text (Behind everything) */}
+      <div className="bg-text-container back">
+
 
         <div className="bg-text-group">
           <svg className="bg-text-svg" viewBox="0 0 1000 200">
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3">COMING</text>
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2">COMING</text>
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-1">COMING</text>
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">COMING</text>
           </svg>
         </div>
         <div className="bg-text-group">
           <svg className="bg-text-svg" viewBox="0 0 1000 200">
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3">SOON</text>
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2">SOON</text>
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-1">SOON</text>
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">SOON</text>
           </svg>
         </div>
       </div>
@@ -117,6 +98,20 @@ function App() {
         <Suspense fallback={null}>
           <MechaHero />
         </Suspense>
+      </div>
+
+      {/* Foreground text (In front of 3D, masked by model via blend-mode) */}
+      <div className="bg-text-container front">
+        <div className="bg-text-group">
+          <svg className="bg-text-svg" viewBox="0 0 1000 200">
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-front">COMING</text>
+          </svg>
+        </div>
+        <div className="bg-text-group">
+          <svg className="bg-text-svg" viewBox="0 0 1000 200">
+            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-front">SOON</text>
+          </svg>
+        </div>
       </div>
 
       {/* Overlay UI */}
