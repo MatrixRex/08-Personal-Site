@@ -87,14 +87,48 @@ function App() {
           transition={{ duration: 1, ease: "circOut" }}
         >
           <div className="logo">
-            <span className="logo-main">MATRA</span>
-            <span className="logo-sub">STUDIO</span>
+            <div className="logo-hud-tag">
+              <span className="tag-box">INIT</span>
+              <div className="tag-line"></div>
+            </div>
+            <div className="logo-main-wrapper">
+              <div className="logo-name-stack">
+                <div className="logo-first-name-row">
+                  <span className="logo-main">NAZMUL</span>
+                  <div className="logo-indicators">
+                    <div className="ind-box"></div>
+                    <div className="custom-arrow">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 4V20H20" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter"/>
+                        <path d="M4 20L20 4" stroke="currentColor" stroke-width="4" stroke-linecap="butt"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <span className="logo-last-name">ISLAM</span>
+              </div>
+            </div>
+            <div className="logo-footer">
+              <div className="roles-column">
+                <div className="role-item">
+                  <span className="role-code">ID_01</span>
+                  <span className="role-name">3D GENERALIST</span>
+                </div>
+                <div className="role-item">
+                  <span className="role-code">ID_02</span>
+                  <span className="role-name">TECH ARTIST</span>
+                </div>
+                <div className="role-item">
+                  <span className="role-code">ID_03</span>
+                  <span className="role-name">WEB APPS BUILDER</span>
+                </div>
+              </div>
+              <div className="logo-ver">
+                <span>PORTFOLIO_V1.0</span>
+                <div className="ver-status"></div>
+              </div>
+            </div>
           </div>
-          <nav className="header-nav">
-            <a href="#">WORKS</a>
-            <a href="#">ABOUT</a>
-            <a href="#">CONTACT</a>
-          </nav>
         </motion.div>
       </header>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const TerminalLog = ({ title, prefix = "USR@MATRA:~$", frequency = 2000 }) => {
+const TerminalLog = ({ title, prefix = "USR@NAZMUL:~$", frequency = 2000 }) => {
   const [logs, setLogs] = useState([]);
   
   useEffect(() => {
@@ -10,7 +10,7 @@ const TerminalLog = ({ title, prefix = "USR@MATRA:~$", frequency = 2000 }) => {
       "COMPILING framer-motion",
       "INITIALIZING postprocessing shaders",
       "BUILDING assets/models/mecha.glb",
-      "SYNCING terminal-4.usa.matra",
+      "SYNCING terminal-alpha.nazmul.core",
       "CHECKING leva@0.10.1",
       "DOWNLOADING dependencies...",
       "RESOLVING @react-three/drei",
