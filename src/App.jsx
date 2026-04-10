@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { FaLinkedin, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { Leva } from 'leva';
 import MechaHero from './components/MechaHero';
@@ -36,18 +36,29 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 35, stiffness: 80 }; // Soft, smooth momentum
+  const sX = useSpring(mouseX, springConfig);
+  const sY = useSpring(mouseY, springConfig);
+
+  // Layer 2 Parallax
+  const l2X = useTransform(sX, x => -x * 0.8);
+  const l2Y = useTransform(sY, y => -y * 0.8);
+
+  // Layer 3 Parallax
+  const l3X = useTransform(sX, x => -x * 1.8);
+  const l3Y = useTransform(sY, y => -y * 1.8);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      // Offset from center, sensitivity adjusted for "slight" movement
-      const x = (e.clientX - window.innerWidth / 2) / 40;
-      const y = (e.clientY - window.innerHeight / 2) / 40;
-      setMousePos({ x, y });
+      mouseX.set((e.clientX - window.innerWidth / 2) / 30);
+      mouseY.set((e.clientY - window.innerHeight / 2) / 30);
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
     <div className="coming-soon-wrapper">
@@ -109,19 +120,19 @@ function App() {
           </defs>
         </svg>        <div className="bg-text-group">
           <svg className="bg-text-svg" viewBox="0 0 1000 200">
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3" 
-              style={{ transform: `translate(${-mousePos.x * 1.5}px, ${-mousePos.y * 1.5}px)` }}>COMING</text>
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2"
-              style={{ transform: `translate(${-mousePos.x * 0.8}px, ${-mousePos.y * 0.8}px)` }}>COMING</text>
+            <motion.text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3" 
+              style={{ x: l3X, y: l3Y }}>COMING</motion.text>
+            <motion.text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2"
+              style={{ x: l2X, y: l2Y }}>COMING</motion.text>
             <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">COMING</text>
           </svg>
         </div>
         <div className="bg-text-group">
           <svg className="bg-text-svg" viewBox="0 0 1000 200">
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3"
-              style={{ transform: `translate(${-mousePos.x * 1.5}px, ${-mousePos.y * 1.5}px)` }}>SOON</text>
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2"
-              style={{ transform: `translate(${-mousePos.x * 0.8}px, ${-mousePos.y * 0.8}px)` }}>SOON</text>
+            <motion.text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3"
+              style={{ x: l3X, y: l3Y }}>SOON</motion.text>
+            <motion.text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2"
+              style={{ x: l2X, y: l2Y }}>SOON</motion.text>
             <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">SOON</text>
           </svg>
         </div>
