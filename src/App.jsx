@@ -2,7 +2,7 @@ import React, { Suspense, useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
-import { Leva } from 'leva';
+
 import MechaHero from './components/MechaHero';
 import TerminalLog from './components/TerminalLog';
 import './App.css';
@@ -59,8 +59,6 @@ function App() {
 
   return (
     <div className="coming-soon-wrapper">
-      <Leva collapsed />
-
       {/* Dynamic Gradient Background Blobs */}
       <div className="gradient-bg">
         <div className="blob blob-1"></div>

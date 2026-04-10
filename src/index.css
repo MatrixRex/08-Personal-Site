@@ -17,10 +17,6 @@
   box-sizing: border-box;
 }
 
-/* Leva UI styling */
-#leva__root {
-  z-index: 99999 !important;
-}
 
 body {
   background-color: var(--color-bg-dark);
