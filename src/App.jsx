@@ -79,9 +79,16 @@ function App() {
 
       {/* Background text (Behind everything) */}
       <div className="bg-text-container back">
-
-
-        <div className="bg-text-group">
+        <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+          <defs>
+            <filter id="perfect-outline" x="-20%" y="-20%" width="140%" height="140%">
+              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="1.2"/>
+              <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outline"/>
+              <feFlood floodColor="white" result="color"/>
+              <feComposite in="color" in2="outline" operator="in"/>
+            </filter>
+          </defs>
+        </svg>        <div className="bg-text-group">
           <svg className="bg-text-svg" viewBox="0 0 1000 200">
             <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">COMING</text>
           </svg>

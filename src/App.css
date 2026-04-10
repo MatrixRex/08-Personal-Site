@@ -210,11 +210,10 @@
   z-index: 1;
 }
 
-/* FRONT LAYER (The Masked Effect) */
 .layer-front {
-  stroke: #fff;
-  stroke-width: 1.5;
-  fill: none;
+  filter: url(#perfect-outline);
+  fill: #fff;
+  stroke: none;
   opacity: 0.1;
 }
 
