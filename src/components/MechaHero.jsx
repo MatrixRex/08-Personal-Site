@@ -1,6 +1,6 @@
 import React, { Suspense, useRef } from 'react';
 import * as THREE from 'three';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
 import { useControls, button } from 'leva';
 import {
@@ -21,10 +21,40 @@ import {
 import { BlendFunction, GlitchMode } from 'postprocessing';
 import Model from './Model';
 
-export default function MechaHero() {
+function MouseRig({ mouseX, mouseY, groupRef, baseRotation }) {
+  const baseQ = new THREE.Quaternion();
+  const cameraRight = new THREE.Vector3();
+  const worldUp = new THREE.Vector3(0, 1, 0);
+
+  useFrame((state) => {
+    if (!mouseX || !mouseY || !groupRef.current) return;
+    
+    const x = mouseX.get() || 0;
+    const y = mouseY.get() || 0;
+    
+    // 1. Extract camera axis for tilt (relative to screen)
+    state.camera.matrixWorld.extractBasis(cameraRight, new THREE.Vector3(), new THREE.Vector3());
+    
+    // 2. Set base rotation from controls
+    baseQ.setFromEuler(new THREE.Euler(baseRotation[0], baseRotation[1], baseRotation[2]));
+    
+    // 3. Hybrid logic: 
+    // Left/Right (x) -> Rotate around world vertical axis (consistent)
+    // Up/Down (y) -> Rotate around camera right axis (tilted relative to viewer)
+    const qY = new THREE.Quaternion().setFromAxisAngle(worldUp, -x * 0.003);
+    const qX = new THREE.Quaternion().setFromAxisAngle(cameraRight, -y * 0.005);
+    
+    // 4. Apply
+    groupRef.current.quaternion.copy(baseQ).premultiply(qY).premultiply(qX);
+  });
+  return null;
+}
+
+export default function MechaHero({ mouseX, mouseY }) {
   // Scene Tweak Settings - Only active in development
   const isDev = import.meta.env.DEV;
   const controlsRef = useRef(null);
+  const modelGroupRef = useRef(null);
 
   const copyJson = async (label, payload) => {
     const text = JSON.stringify(payload, null, 2);
@@ -334,15 +364,16 @@ export default function MechaHero() {
         style={{ width: '100%', height: '100%' }}
       >
         <PerspectiveCamera makeDefault position={cameraPos} fov={cameraFov} />
+        <MouseRig mouseX={mouseX} mouseY={mouseY} groupRef={modelGroupRef} baseRotation={modelRotation} />
 
         <ambientLight intensity={ambientIntensity} args={[null, 11.92]} castShadow={false} />
         <pointLight position={pointPos} intensity={pointIntensity} color={pointColor} castShadow />
 
         <Suspense fallback={null}>
           <group
+            ref={modelGroupRef}
             name="Mecha Group"
             position={modelPosition}
-            rotation={modelRotation}
             scale={modelScale} castShadow={true}
           >
             <Model envMapIntensity={intensity} />

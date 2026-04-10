@@ -39,17 +39,13 @@ function App() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const springConfig = { damping: 35, stiffness: 80 }; // Soft, smooth momentum
+  const springConfig = { damping:50, stiffness: 15 }; // Soft, smooth momentum
   const sX = useSpring(mouseX, springConfig);
   const sY = useSpring(mouseY, springConfig);
 
-  // Layer 2 Parallax
-  const l2X = useTransform(sX, x => -x * 0.8);
-  const l2Y = useTransform(sY, y => -y * 0.8);
-
-  // Layer 3 Parallax
-  const l3X = useTransform(sX, x => -x * 1.8);
-  const l3Y = useTransform(sY, y => -y * 1.8);
+  // 3D Rotation transforms
+  const rotX = useTransform(sY, y => -y * .15);
+  const rotY = useTransform(sX, x => x * .15);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -102,62 +98,108 @@ function App() {
       </header>
 
       {/* Background text (Behind everything) */}
-      <div className="bg-text-container back">
+      <motion.div 
+        className="bg-text-container back" 
+        style={{ 
+          x: "-50%",
+          y: "-50%",
+          rotateX: rotX, 
+          rotateY: rotY,
+          transformStyle: 'preserve-3d' 
+        }}
+      >
         <svg style={{ position: 'absolute', width: 0, height: 0 }}>
           <defs>
             <filter id="perfect-outline" x="-20%" y="-20%" width="140%" height="140%">
-              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="1.2"/>
-              <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outline"/>
-              <feFlood floodColor="white" result="color"/>
-              <feComposite in="color" in2="outline" operator="in"/>
+              <feMorphology in="SourceGraphic" result="dilated" operator="dilate" radius="1.2"/>
+              <feComposite in="dilated" in2="SourceAlpha" operator="out"/>
             </filter>
             <filter id="perfect-outline-thin" x="-20%" y="-20%" width="140%" height="140%">
-              <feMorphology in="SourceAlpha" result="expanded" operator="dilate" radius="0.6"/>
-              <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outline"/>
-              <feFlood floodColor="white" result="color"/>
-              <feComposite in="color" in2="outline" operator="in"/>
+              <feMorphology in="SourceGraphic" result="dilated" operator="dilate" radius="0.6"/>
+              <feComposite in="dilated" in2="SourceAlpha" operator="out"/>
             </filter>
           </defs>
-        </svg>        <div className="bg-text-group">
-          <svg className="bg-text-svg" viewBox="0 0 1000 200">
-            <motion.text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3" 
-              style={{ x: l3X, y: l3Y }}>COMING</motion.text>
-            <motion.text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2"
-              style={{ x: l2X, y: l2Y }}>COMING</motion.text>
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">COMING</text>
-          </svg>
-        </div>
+        </svg>
+
+        {/* COMING block */}
         <div className="bg-text-group">
-          <svg className="bg-text-svg" viewBox="0 0 1000 200">
-            <motion.text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3"
-              style={{ x: l3X, y: l3Y }}>SOON</motion.text>
-            <motion.text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2"
-              style={{ x: l2X, y: l2Y }}>SOON</motion.text>
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">SOON</text>
-          </svg>
+          {/* Layer 3 (Deepest) */}
+          <motion.div className="layer-3-3d" style={{ transformStyle: 'preserve-3d', translateZ: -60, position: 'absolute' }}>
+            <svg className="bg-text-svg" viewBox="0 0 1000 200">
+              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3">COMING</text>
+            </svg>
+          </motion.div>
+          
+          {/* Layer 2 (Middle) */}
+          <motion.div className="layer-2-3d" style={{ transformStyle: 'preserve-3d', translateZ: -30, position: 'absolute' }}>
+            <svg className="bg-text-svg" viewBox="0 0 1000 200">
+              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2">COMING</text>
+            </svg>
+          </motion.div>
+
+          {/* Layer 1 (Solid Fill) */}
+          <motion.div className="layer-1-3d" style={{ transformStyle: 'preserve-3d', translateZ: 0, position: 'absolute' }}>
+            <svg className="bg-text-svg" viewBox="0 0 1000 200">
+              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">COMING</text>
+            </svg>
+          </motion.div>
         </div>
-      </div>
+
+        {/* SOON block */}
+        <div className="bg-text-group">
+          <motion.div className="layer-3-3d" style={{ transformStyle: 'preserve-3d', translateZ: -60, position: 'absolute' }}>
+            <svg className="bg-text-svg" viewBox="0 0 1000 200">
+              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3">SOON</text>
+            </svg>
+          </motion.div>
+          
+          <motion.div className="layer-2-3d" style={{ transformStyle: 'preserve-3d', translateZ: -30, position: 'absolute' }}>
+            <svg className="bg-text-svg" viewBox="0 0 1000 200">
+              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2">SOON</text>
+            </svg>
+          </motion.div>
+
+          <motion.div className="layer-1-3d" style={{ transformStyle: 'preserve-3d', translateZ: 0, position: 'absolute' }}>
+            <svg className="bg-text-svg" viewBox="0 0 1000 200">
+              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">SOON</text>
+            </svg>
+          </motion.div>
+        </div>
+      </motion.div>
 
       {/* 3D Canvas container */}
       <div className="canvas-wrapper">
         <Suspense fallback={null}>
-          <MechaHero />
+          <MechaHero mouseX={sX} mouseY={sY} />
         </Suspense>
       </div>
 
       {/* Foreground text (In front of 3D, masked by model via blend-mode) */}
-      <div className="bg-text-container front">
+      <motion.div 
+        className="bg-text-container front"
+        style={{ 
+          x: "-50%",
+          y: "-50%",
+          rotateX: rotX, 
+          rotateY: rotY,
+          transformStyle: 'preserve-3d' 
+        }}
+      >
         <div className="bg-text-group">
-          <svg className="bg-text-svg" viewBox="0 0 1000 200">
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-front">COMING</text>
-          </svg>
+          <motion.div style={{ transformStyle: 'preserve-3d', translateZ: 0 }}>
+            <svg className="bg-text-svg" viewBox="0 0 1000 200">
+              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-front">COMING</text>
+            </svg>
+          </motion.div>
         </div>
         <div className="bg-text-group">
-          <svg className="bg-text-svg" viewBox="0 0 1000 200">
-            <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-front">SOON</text>
-          </svg>
+          <motion.div style={{ transformStyle: 'preserve-3d', translateZ: 0 }}>
+            <svg className="bg-text-svg" viewBox="0 0 1000 200">
+              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-front">SOON</text>
+            </svg>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Overlay UI */}
       <div className="overlay-ui">
