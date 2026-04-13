@@ -70,15 +70,15 @@ function App() {
   }, [mouseX, mouseY, isMobile]);
 
   return (
-    <div className="coming-soon-wrapper">
-      {/* Dynamic Gradient Background Blobs */}
+    <>
+      {/* Dynamic Gradient Background Blobs (Global/Fixed) */}
       <div className="gradient-bg">
         <div className="blob blob-1"></div>
         <div className="blob blob-2"></div>
         <div className="blob blob-3"></div>
       </div>
 
-      {/* Sci-Fi SVG Decorations */}
+      {/* Sci-Fi SVG Decorations (Global/Fixed HUD) */}
       <div className="tech-decorations">
         <div className="corner-bracket top-left-bracket"></div>
         <div className="corner-bracket top-right-bracket"></div>
@@ -87,6 +87,8 @@ function App() {
         <div className="crosshair"></div>
         <div className="scanner-line"></div>
       </div>
+
+      <div className="coming-soon-wrapper">
 
       {/* Header */}
       <header className="main-header">
@@ -329,6 +331,7 @@ function App() {
 
       </div>
     </div>
+  </>
   );
 }
 
