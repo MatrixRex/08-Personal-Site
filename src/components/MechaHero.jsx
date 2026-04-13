@@ -55,7 +55,7 @@ export default function MechaHero({ mouseX, mouseY, isMobile }) {
   const cameraTarget = [-0.826, 0.753, -0.665];
   const cameraFov = 45;
 
-  const modelPosition = [0, 0, 0];
+  const modelPosition = [0, 0.5, 0];
   const modelRotation = [0, 0, 0];
   const modelScale = 1;
 

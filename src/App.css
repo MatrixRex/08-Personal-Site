@@ -289,7 +289,7 @@
 /* Background outline text layer */
 .bg-text-container {
   position: absolute;
-  top: 50%;
+  top: 46%;
   left: 50%;
   width: 100%;
   pointer-events: none;
@@ -840,7 +840,7 @@
 
   .bg-text-container {
     position: absolute;
-    top: 50vh; 
+    top: 46vh; 
     left: 50%;
     transform: translate(-50%, -50%) !important;
     gap: 20px;
