@@ -297,7 +297,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 0;
+  gap: 10px;
 }
 
 .bg-text-container.back {
@@ -311,7 +311,7 @@
 }
 
 .bg-text-group {
-  width: 100%;
+  width: 50vw;
   height: 25vh;
   display: flex;
   justify-content: center;
@@ -330,46 +330,39 @@
 }
 
 .bg-text-svg {
-  width: 100vw;
-  height: 25vh;
-  overflow: visible;
+  width: auto;
+  height: 15vh; /* Adjust height based on design needs */
+  max-width: 80vw;
+  display: block;
+  fill: currentColor;
 }
 
 .bg-text-layer {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 900;
-  font-size: 210px;
-  letter-spacing: -0.05em;
-  text-transform: uppercase;
-  /* Removed transition to avoid conflict with framer-motion */
+  width: 100%;
+  height: auto;
+  pointer-events: none;
 }
 
 /* BACK LAYERS */
 .layer-filled {
-  fill: #303030;
-  opacity: 1;
+  color: #ffffff;
+  opacity: .3; /* Subdued solid color like before */
   z-index: 3;
 }
 
-.layer-2 {
-  filter: url(#perfect-outline-thin);
-  fill: #fff;
-  opacity: 0.15;
-  z-index: 2;
-}
-
 .layer-3 {
-  filter: url(#perfect-outline-thin);
-  fill: #fff;
-  opacity: 0.1;
+  opacity: 0.15;
   z-index: 1;
 }
 
+.layer-2 {
+  opacity: 0.3;
+  z-index: 2;
+}
+
 .layer-front {
-  filter: url(#perfect-outline);
-  fill: #606060;
-  stroke: none;
-  opacity: .5;
+  opacity: 0.25;
+  z-index: 5;
 }
 
 /* Tech Decorations */
@@ -803,47 +796,227 @@
 
 /* Responsive adjustments */
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
+  .coming-soon-wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    scroll-snap-type: y mandatory;
+  }
+
+  /* First Fold: Name + Model + Coming Soon */
+  .main-header, .canvas-wrapper, .bg-text-container {
+    scroll-snap-align: start;
+    width: 100%;
+  }
+
   .main-header {
-    max-width: 90%;
+    position: relative;
+    padding: 25px 20px 0;
+    order: 1;
   }
-  .terminal-section {
-    gap: 30px;
+
+  .logo-main {
+    font-size: 2.2rem;
   }
+  
+  .logo-last-name {
+    font-size: 0.7rem;
+    letter-spacing: 0.6em;
+  }
+
+  .canvas-wrapper {
+    position: relative;
+    height: 70vh;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    order: 2;
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  .bg-text-container {
+    position: absolute;
+    top: 50vh; 
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+    gap: 20px;
+    pointer-events: none;
+    order: 1;
+  }
+
+  .bg-text-layer {
+    font-size: 80px;
+  }
+
+  .bg-text-svg {
+    height: 10vh;
+    width: 100vw;
+  }
+
+  .bg-text-group {
+    height: 10vh;
+  }
+
+  /* 2nd Part: UI elements */
+  .overlay-ui {
+    position: relative;
+    padding: 20px;
+    height: auto;
+    width: 100%;
+    order: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 15px;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));
+  }
+
   .info-grid {
-    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
   }
+
+  .info-block {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 12px;
+    font-size: 0.6rem;
+    max-width: 160px;
+  }
+
+  /* Compact Media Bar */
+  .media-bar {
+    flex-direction: row;
+    padding: 8px 12px;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .media-left {
+    width: auto;
+    gap: 8px;
+  }
+
+  .media-progress {
+    display: none; /* Hide progress bar on mobile to save space and CPU */
+  }
+
+  .media-right {
+    width: auto;
+    gap: 10px;
+    font-size: 0.6rem;
+  }
+
+  .timestamp-container {
+    min-width: 70px;
+    transform: scale(0.8);
+  }
+
+  /* Mini Console Tabs */
+  .terminal-section {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin-top: 5px;
+  }
+
+  .terminal-tabs-mobile {
+    display: flex !important; /* Force visibility */
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 12px 5px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .tab-btn.active {
+    color: var(--color-accent);
+    background: rgba(0, 229, 255, 0.05);
+  }
+
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-accent);
+    box-shadow: 0 0 10px var(--color-accent);
+  }
+
+  .terminal-col {
+    display: none;
+    width: 100%;
+    padding: 10px 15px;
+  }
+
+  .terminal-col.active {
+    display: block;
+  }
+
+  .terminal-title {
+    display: none; /* Already in tab button */
+  }
+
+  /* Floating social is too much on mobile, move to bottom or keep minimal */
   .social-sidebar {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
+    position: relative;
+    right: auto;
     top: auto;
     transform: none;
     flex-direction: row;
-    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
+    order: 4;
   }
-  
-  .social-bars {
-    display: none;
-  }
-  
+
   .social-link {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     padding: 0;
     justify-content: center;
     clip-path: none;
     border-radius: 4px;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
-  .social-link:hover {
-    width: 50px;
-  }
-  
-  .social-label, .social-link::before {
+
+  .social-label, .social-link::before, .social-bars {
     display: none;
   }
+}
+
+/* Hide tabs on desktop */
+.terminal-tabs-mobile {
+  display: none;
+}
+
+.terminal-col {
+  flex: 1;
 }
 
 

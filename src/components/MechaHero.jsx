@@ -50,7 +50,7 @@ function MouseRig({ mouseX, mouseY, groupRef, baseRotation }) {
   return null;
 }
 
-export default function MechaHero({ mouseX, mouseY }) {
+export default function MechaHero({ mouseX, mouseY, isMobile }) {
     const cameraPos = [4.581, 4.274, 4.25];
   const cameraTarget = [-0.826, 0.753, -0.665];
   const cameraFov = 45;
@@ -131,7 +131,7 @@ export default function MechaHero({ mouseX, mouseY }) {
         style={{ width: '100%', height: '100%' }}
       >
         <PerspectiveCamera makeDefault position={cameraPos} fov={cameraFov} />
-        <MouseRig mouseX={mouseX} mouseY={mouseY} groupRef={modelGroupRef} baseRotation={modelRotation} />
+        {!isMobile && <MouseRig mouseX={mouseX} mouseY={mouseY} groupRef={modelGroupRef} baseRotation={modelRotation} />}
 
         <ambientLight intensity={ambientIntensity} args={[null, 11.92]} castShadow={false} />
         <pointLight position={pointPos} intensity={pointIntensity} color={pointColor} castShadow />
@@ -259,4 +259,3 @@ export default function MechaHero({ mouseX, mouseY }) {
     </div>
   );
 }
-

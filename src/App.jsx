@@ -5,15 +5,26 @@ import { FaXTwitter } from 'react-icons/fa6';
 
 import MechaHero from './components/MechaHero';
 import TerminalLog from './components/TerminalLog';
+import ComingSoonSVG from './components/ComingSoonSVG';
 import './App.css';
 
 function App() {
+  const [activeTab, setActiveTab] = useState(0);
   const [times, setTimes] = useState({
     dhaka: '',
     newyork: '',
     dubai: '',
     milis: ''
   });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 768px)');
+    const onChange = () => setIsMobile(mql.matches);
+    setIsMobile(mql.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
 
   useEffect(() => {
     const updateClocks = () => {
@@ -49,13 +60,14 @@ function App() {
   const rotY = useTransform(sX, x => x * .15);
 
   useEffect(() => {
+    if (isMobile) return;
     const handleMouseMove = (e) => {
       mouseX.set((e.clientX - window.innerWidth / 2) / 30);
       mouseY.set((e.clientY - window.innerHeight / 2) / 30);
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, isMobile]);
 
   return (
     <div className="coming-soon-wrapper">
@@ -143,59 +155,22 @@ function App() {
       >
         <svg style={{ position: 'absolute', width: 0, height: 0 }}>
           <defs>
-            <filter id="perfect-outline" x="-20%" y="-20%" width="140%" height="140%">
-              <feMorphology in="SourceGraphic" result="dilated" operator="dilate" radius="1.2"/>
-              <feComposite in="dilated" in2="SourceAlpha" operator="out"/>
-            </filter>
-            <filter id="perfect-outline-thin" x="-20%" y="-20%" width="140%" height="140%">
-              <feMorphology in="SourceGraphic" result="dilated" operator="dilate" radius="0.6"/>
-              <feComposite in="dilated" in2="SourceAlpha" operator="out"/>
-            </filter>
+            {/* Keeping definitions for any potential future use, but we will use CSS for performance now */}
           </defs>
         </svg>
 
         {/* COMING block */}
         <div className="bg-text-group">
-          {/* Layer 3 (Deepest) */}
-          <motion.div className="layer-3-3d" style={{ transformStyle: 'preserve-3d', translateZ: -60, position: 'absolute' }}>
-            <svg className="bg-text-svg" viewBox="0 0 1000 200">
-              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3">COMING</text>
-            </svg>
-          </motion.div>
-          
-          {/* Layer 2 (Middle) */}
-          <motion.div className="layer-2-3d" style={{ transformStyle: 'preserve-3d', translateZ: -30, position: 'absolute' }}>
-            <svg className="bg-text-svg" viewBox="0 0 1000 200">
-              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2">COMING</text>
-            </svg>
-          </motion.div>
-
           {/* Layer 1 (Solid Fill) */}
           <motion.div className="layer-1-3d" style={{ transformStyle: 'preserve-3d', translateZ: 0, position: 'absolute' }}>
-            <svg className="bg-text-svg" viewBox="0 0 1000 200">
-              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">COMING</text>
-            </svg>
+            <ComingSoonSVG type="solid" text="coming" className="bg-text-svg layer-filled" />
           </motion.div>
         </div>
 
         {/* SOON block */}
         <div className="bg-text-group">
-          <motion.div className="layer-3-3d" style={{ transformStyle: 'preserve-3d', translateZ: -60, position: 'absolute' }}>
-            <svg className="bg-text-svg" viewBox="0 0 1000 200">
-              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-3">SOON</text>
-            </svg>
-          </motion.div>
-          
-          <motion.div className="layer-2-3d" style={{ transformStyle: 'preserve-3d', translateZ: -30, position: 'absolute' }}>
-            <svg className="bg-text-svg" viewBox="0 0 1000 200">
-              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-2">SOON</text>
-            </svg>
-          </motion.div>
-
           <motion.div className="layer-1-3d" style={{ transformStyle: 'preserve-3d', translateZ: 0, position: 'absolute' }}>
-            <svg className="bg-text-svg" viewBox="0 0 1000 200">
-              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-filled">SOON</text>
-            </svg>
+            <ComingSoonSVG type="solid" text="soon" className="bg-text-svg layer-filled" />
           </motion.div>
         </div>
       </motion.div>
@@ -203,7 +178,7 @@ function App() {
       {/* 3D Canvas container */}
       <div className="canvas-wrapper">
         <Suspense fallback={null}>
-          <MechaHero mouseX={sX} mouseY={sY} />
+          <MechaHero mouseX={sX} mouseY={sY} isMobile={isMobile} />
         </Suspense>
       </div>
 
@@ -220,16 +195,12 @@ function App() {
       >
         <div className="bg-text-group">
           <motion.div style={{ transformStyle: 'preserve-3d', translateZ: 0 }}>
-            <svg className="bg-text-svg" viewBox="0 0 1000 200">
-              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-front">COMING</text>
-            </svg>
+            <ComingSoonSVG type="outline" text="coming" className="bg-text-svg layer-front" />
           </motion.div>
         </div>
         <div className="bg-text-group">
           <motion.div style={{ transformStyle: 'preserve-3d', translateZ: 0 }}>
-            <svg className="bg-text-svg" viewBox="0 0 1000 200">
-              <text x="50%" y="60%" textAnchor="middle" className="bg-text-layer layer-front">SOON</text>
-            </svg>
+            <ComingSoonSVG type="outline" text="soon" className="bg-text-svg layer-front" />
           </motion.div>
         </div>
       </motion.div>
@@ -298,10 +269,23 @@ function App() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
+          style={{ pointerEvents: isMobile ? 'auto' : 'none' }} // Ensure interaction is possible
         >
-          <TerminalLog title="ENGINE_PIPELINE" prefix="SYS_A >" frequency={3000} />
-          <TerminalLog title="RENDER_THREAD" prefix="GPU_B >" frequency={1500} />
-          <TerminalLog title="ASSET_FETCHER" prefix="NET_C >" frequency={4500} />
+          {/* Mobile Tabs Header */}
+          <div className="terminal-tabs-mobile">
+            <button className={`tab-btn ${activeTab === 0 ? 'active' : ''}`} onClick={() => setActiveTab(0)}>ENGINE</button>
+            <button className={`tab-btn ${activeTab === 1 ? 'active' : ''}`} onClick={() => setActiveTab(1)}>RENDER</button>
+            <button className={`tab-btn ${activeTab === 2 ? 'active' : ''}`} onClick={() => setActiveTab(2)}>ASSETS</button>
+          </div>
+          <div className={`terminal-col ${activeTab === 0 ? 'active' : ''}`}>
+            <TerminalLog title="ENGINE_PIPELINE" prefix="SYS_A >" frequency={3000} />
+          </div>
+          <div className={`terminal-col ${activeTab === 1 ? 'active' : ''}`}>
+            <TerminalLog title="RENDER_THREAD" prefix="GPU_B >" frequency={1500} />
+          </div>
+          <div className={`terminal-col ${activeTab === 2 ? 'active' : ''}`}>
+            <TerminalLog title="ASSET_FETCHER" prefix="NET_C >" frequency={4500} />
+          </div>
         </motion.div>
 
         {/* Social Right (Floating) */}
