@@ -91,7 +91,8 @@ function App() {
       <div className="coming-soon-wrapper">
 
       {/* Header */}
-      <header className="main-header">
+      <div className="mobile-hero-fold">
+        <header className="main-header">
         <motion.div
           className="header-content"
           initial={{ y: -100 }}
@@ -144,126 +145,213 @@ function App() {
         </motion.div>
       </header>
 
-      {/* Background text (Behind everything) */}
-      <motion.div 
-        className="bg-text-container back" 
-        style={{ 
-          x: "-50%",
-          y: "-50%",
-          rotateX: rotX, 
-          rotateY: rotY,
-          transformStyle: 'preserve-3d' 
-        }}
-      >
-        <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-          <defs>
-            {/* Keeping definitions for any potential future use, but we will use CSS for performance now */}
-          </defs>
-        </svg>
+        <div className="hero-section">
+          {/* Background text (Behind everything) */}
+          <motion.div 
+            className="bg-text-container back" 
+            style={{ 
+              top: '50%',
+              left: '50%',
+              x: "-50%",
+              y: "-50%",
+              rotateX: rotX, 
+              rotateY: rotY,
+              transformStyle: 'preserve-3d' 
+            }}
+          >
+            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+              <defs>
+                {/* Keeping definitions for any potential future use, but we will use CSS for performance now */}
+              </defs>
+            </svg>
 
-        {/* COMING block */}
-        <div className="bg-text-group">
-          {/* Layer 1 (Solid Fill) */}
-          <motion.div className="layer-1-3d" style={{ transformStyle: 'preserve-3d', translateZ: 0, position: 'absolute' }}>
-            <ComingSoonSVG type="solid" text="coming" className="bg-text-svg layer-filled" />
+            <div className="bg-text-group">
+              <motion.div style={{ transformStyle: 'preserve-3d', translateZ: 0 }}>
+                <ComingSoonSVG type="solid" text="coming" className="bg-text-svg layer-filled" />
+              </motion.div>
+            </div>
+
+            <div className="bg-text-group">
+              <motion.div style={{ transformStyle: 'preserve-3d', translateZ: 0 }}>
+                <ComingSoonSVG type="solid" text="soon" className="bg-text-svg layer-filled" />
+              </motion.div>
+            </div>
           </motion.div>
-        </div>
 
-        {/* SOON block */}
-        <div className="bg-text-group">
-          <motion.div className="layer-1-3d" style={{ transformStyle: 'preserve-3d', translateZ: 0, position: 'absolute' }}>
-            <ComingSoonSVG type="solid" text="soon" className="bg-text-svg layer-filled" />
+          {/* 3D Canvas container */}
+          <div className="canvas-wrapper">
+            <Suspense fallback={null}>
+              <MechaHero mouseX={sX} mouseY={sY} isMobile={isMobile} />
+            </Suspense>
+          </div>
+
+          {/* Foreground text (In front of 3D, masked by model via blend-mode) */}
+          <motion.div 
+            className="bg-text-container front"
+            style={{ 
+              top: '50%',
+              left: '50%',
+              x: "-50%",
+              y: "-50%",
+              rotateX: rotX, 
+              rotateY: rotY,
+              transformStyle: 'preserve-3d' 
+            }}
+          >
+            <div className="bg-text-group">
+              <motion.div style={{ transformStyle: 'preserve-3d', translateZ: 0 }}>
+                <ComingSoonSVG type="outline" text="coming" className="bg-text-svg layer-front" />
+              </motion.div>
+            </div>
+            <div className="bg-text-group">
+              <motion.div style={{ transformStyle: 'preserve-3d', translateZ: 0 }}>
+                <ComingSoonSVG type="outline" text="soon" className="bg-text-svg layer-front" />
+              </motion.div>
+            </div>
           </motion.div>
-        </div>
-      </motion.div>
 
-      {/* 3D Canvas container */}
-      <div className="canvas-wrapper">
-        <Suspense fallback={null}>
-          <MechaHero mouseX={sX} mouseY={sY} isMobile={isMobile} />
-        </Suspense>
+          {/* Scroll Indicator (Mobile only) */}
+          {isMobile && (
+            <motion.div
+              className="scroll-indicator"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2, duration: 1 }}
+            >
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              >
+                <span className="scroll-text">SCROLL</span>
+                <div className="scroll-arrow"></div>
+              </motion.div>
+            </motion.div>
+          )}
+        </div>
       </div>
-
-      {/* Foreground text (In front of 3D, masked by model via blend-mode) */}
-      <motion.div 
-        className="bg-text-container front"
-        style={{ 
-          x: "-50%",
-          y: "-50%",
-          rotateX: rotX, 
-          rotateY: rotY,
-          transformStyle: 'preserve-3d' 
-        }}
-      >
-        <div className="bg-text-group">
-          <motion.div style={{ transformStyle: 'preserve-3d', translateZ: 0 }}>
-            <ComingSoonSVG type="outline" text="coming" className="bg-text-svg layer-front" />
-          </motion.div>
-        </div>
-        <div className="bg-text-group">
-          <motion.div style={{ transformStyle: 'preserve-3d', translateZ: 0 }}>
-            <ComingSoonSVG type="outline" text="soon" className="bg-text-svg layer-front" />
-          </motion.div>
-        </div>
-      </motion.div>
 
       {/* Overlay UI */}
       <div className="overlay-ui">
         {/* Central Info Blocks */}
-        <div className="info-grid">
+        {isMobile ? (
           <motion.div
-            className="info-block glass"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            className="info-block glass single-label"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <span className="label">LAUNCHING SOON</span>
+            <span className="label">LAUNCHING SOON v1.0.0</span>
           </motion.div>
-          <motion.div
-            className="info-block glass disabled"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <span className="label muted">GLOBAL RELEASE V1.0.0</span>
-          </motion.div>
-        </div>
+        ) : (
+          <div className="info-grid">
+            <motion.div
+              className="info-block glass"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <span className="label">LAUNCHING SOON</span>
+            </motion.div>
+            <motion.div
+              className="info-block glass disabled"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <span className="label muted">GLOBAL RELEASE V1.0.0</span>
+            </motion.div>
+          </div>
+        )}
 
-        {/* Media Control Bar */}
-        <motion.div
-          className="media-bar glass"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
-          <div className="media-left">
-            <div className="media-indicator active"></div>
-            <span className="media-status">EXECUTING</span>
+        {/* Social Links - Reordered for Mobile */}
+        {isMobile && (
+          <motion.div 
+            className="social-container-mobile"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            <a href="https://www.linkedin.com/in/nazmul-islam-031446182/" target="_blank" rel="noopener noreferrer" className="social-icon-box glass">
+              <FaLinkedin />
+            </a>
+            <a href="https://x.com/matrixalter05" target="_blank" rel="noopener noreferrer" className="social-icon-box glass">
+              <FaXTwitter />
+            </a>
+            <a href="https://www.youtube.com/@MatrixRex05" target="_blank" rel="noopener noreferrer" className="social-icon-box glass">
+              <FaYoutube />
+            </a>
+          </motion.div>
+        )}
+
+        {/* Media Control Bar / Split Sections */}
+        {isMobile ? (
+          <div className="mobile-split-sections">
+            <motion.div className="media-bar glass split-one" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
+              <div className="media-left">
+                <div className="media-indicator active"></div>
+                <span className="media-status">EXECUTING</span>
+              </div>
+              <div className="media-progress visible-on-mobile">
+                <div className="progress-stripe-container">
+                  <div className="scrolling-stripes"></div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div className="media-bar glass split-two" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
+              <div className="timestamp-container">
+                <div className="fake-milis all-reels">
+                  {[...Array(13)].map((_, i) => (
+                    <div key={i} className="mili-reel" style={{ animationDuration: `${0.05 * Math.pow(1.6, 12 - i)}s` }}>
+                      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n, idx) => (
+                        <span key={idx}>{n}</span>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div className="media-bar glass split-three" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
+               <span className="sound">STATUS <span className="highlight">ACTIVE</span></span>
+            </motion.div>
           </div>
-          <div className="media-progress">
-            <div className="progress-stripe-container">
-              <div className="scrolling-stripes"></div>
+        ) : (
+          <motion.div
+            className="media-bar glass"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+          >
+            <div className="media-left">
+              <div className="media-indicator active"></div>
+              <span className="media-status">EXECUTING</span>
             </div>
-          </div>
-          <div className="media-right">
-            <div className="timestamp-container">
-              <div className="fake-milis all-reels">
-                {[...Array(13)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="mili-reel"
-                    style={{ animationDuration: `${0.05 * Math.pow(1.6, 12 - i)}s` }}
-                  >
-                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n, idx) => (
-                      <span key={idx}>{n}</span>
-                    ))}
-                  </div>
-                ))}
+            <div className="media-progress">
+              <div className="progress-stripe-container">
+                <div className="scrolling-stripes"></div>
               </div>
             </div>
-            <span className="sound">PRODUCTION <span className="highlight">ACTIVE</span></span>
-          </div>
-        </motion.div>
+            <div className="media-right">
+              <div className="timestamp-container">
+                <div className="fake-milis all-reels">
+                  {[...Array(13)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="mili-reel"
+                      style={{ animationDuration: `${0.05 * Math.pow(1.6, 12 - i)}s` }}
+                    >
+                      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n, idx) => (
+                        <span key={idx}>{n}</span>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <span className="sound">STATUS <span className="highlight">ACTIVE</span></span>
+            </div>
+          </motion.div>
+        )}
 
         {/* Footer Info Section */}
         <motion.div
@@ -290,41 +378,43 @@ function App() {
           </div>
         </motion.div>
 
-        {/* Social Right (Floating) */}
-        <div className="social-sidebar">
-          <div className="social-item">
-            <div className="social-bars">
-              <div className="bar-thinner"></div>
-              <div className="bar-thicker"></div>
+        {/* Social Right (Floating on Desktop, Hidden on Mobile as it's inline now) */}
+        {!isMobile && (
+          <div className="social-sidebar">
+            <div className="social-item">
+              <div className="social-bars">
+                <div className="bar-thinner"></div>
+                <div className="bar-thicker"></div>
+              </div>
+              <a href="https://www.linkedin.com/in/nazmul-islam-031446182/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">
+                <span className="social-label">LINKEDIN</span>
+                <FaLinkedin />
+              </a>
             </div>
-            <a href="https://www.linkedin.com/in/nazmul-islam-031446182/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">
-              <span className="social-label">LINKEDIN</span>
-              <FaLinkedin />
-            </a>
-          </div>
 
-          <div className="social-item">
-            <div className="social-bars">
-              <div className="bar-thinner"></div>
-              <div className="bar-thicker"></div>
+            <div className="social-item">
+              <div className="social-bars">
+                <div className="bar-thinner"></div>
+                <div className="bar-thicker"></div>
+              </div>
+              <a href="https://x.com/matrixalter05" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="X">
+                <span className="social-label">X (TWITTER)</span>
+                <FaXTwitter />
+              </a>
             </div>
-            <a href="https://x.com/matrixalter05" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="X">
-              <span className="social-label">X (TWITTER)</span>
-              <FaXTwitter />
-            </a>
-          </div>
 
-          <div className="social-item">
-            <div className="social-bars">
-              <div className="bar-thinner"></div>
-              <div className="bar-thicker"></div>
+            <div className="social-item">
+              <div className="social-bars">
+                <div className="bar-thinner"></div>
+                <div className="bar-thicker"></div>
+              </div>
+              <a href="https://www.youtube.com/@MatrixRex05" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="YouTube">
+                <span className="social-label">YOUTUBE</span>
+                <FaYoutube />
+              </a>
             </div>
-            <a href="https://www.youtube.com/@MatrixRex05" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="YouTube">
-              <span className="social-label">YOUTUBE</span>
-              <FaYoutube />
-            </a>
           </div>
-        </div>
+        )}
 
 
 

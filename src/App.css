@@ -106,7 +106,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 6px;
+  margin-bottom: 0px;
 }
 
 .tag-box {
@@ -299,7 +299,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 5vh;
 }
 
 .bg-text-container.back {
@@ -314,7 +314,7 @@
 
 .bg-text-group {
   width: 50vw;
-  height: 25vh;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -806,6 +806,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     scroll-snap-type: y mandatory;
   }
 
@@ -817,57 +818,121 @@
 
   .main-header {
     position: relative;
-    padding: 25px 20px 0;
+    padding: 10px 20px 0;
     order: 1;
+    width: 100%;
+    z-index: 100;
   }
 
   .logo-main {
-    font-size: 2.2rem;
-  }
-  
-  .logo-last-name {
-    font-size: 0.7rem;
-    letter-spacing: 0.6em;
+    font-size: 2.5rem !important;
+    letter-spacing: -0.01em;
   }
 
-  .canvas-wrapper {
+  .mobile-hero-fold {
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
     position: relative;
-    height: 70dvh;
-    margin-top: 5vh;
-    margin-bottom: 5vh;
-    order: 2;
-    z-index: 20;
-    pointer-events: none;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    z-index: 10;
+  }
+
+  .hero-section {
+    position: relative;
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    order: 2; /* Header (1) then Hero (2) */
   }
 
   .bg-text-container {
     position: absolute;
-    top: 46dvh; 
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) !important;
-    gap: 20px;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    order: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 0;
+    z-index: 5;
   }
 
-  .bg-text-layer {
-    font-size: 80px;
+  .bg-text-container.back { z-index: 1; }
+  .bg-text-container.front { z-index: 10; }
+
+  .bg-text-group {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .bg-text-svg {
-    height: 10dvh;
-    width: 100vw;
+    width: 90% !important;
+    height: auto !important;
+    margin: 0 auto;
   }
 
-  .bg-text-group {
-    height: 10dvh;
+  .canvas-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 450px;
+    z-index: 5;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .scroll-text {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 3px;
+    color: var(--color-accent);
+    opacity: 0.6;
+    margin-bottom: 8px;
+    display: block;
+    text-align: center;
+  }
+
+  .scroll-arrow {
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+    transform: rotate(45deg);
+    margin: 0 auto;
+    opacity: 0.8;
   }
 
   /* 2nd Part: UI elements */
   .overlay-ui {
     position: relative;
     padding: 20px;
-    height: auto;
+    min-height: 100dvh; /* Ensure it takes full screen if scrolled */
     width: 100%;
     order: 3;
     display: flex;
@@ -875,51 +940,98 @@
     justify-content: flex-start;
     gap: 15px;
     background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));
+    scroll-snap-align: start;
+    z-index: 5;
   }
 
-  .info-grid {
-    flex-direction: row;
+  .single-label {
+    max-width: 100%;
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .social-container-mobile {
+    display: flex;
     gap: 10px;
     width: 100%;
     justify-content: center;
+    margin-bottom: 5px;
   }
 
-  .info-block {
-    flex: 1;
-    min-width: 0;
-    padding: 8px 12px;
-    font-size: 0.6rem;
-    max-width: 160px;
-  }
-
-  /* Compact Media Bar */
-  .media-bar {
-    flex-direction: row;
-    padding: 8px 12px;
-    gap: 10px;
+  .social-icon-box {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #fff;
+    border-radius: 4px;
+    transition: all 0.3s;
+  }
+
+  .mobile-split-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .media-bar {
+    width: 100%;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    padding-left: 13px;
+    padding-right: 10px;
+    gap: 0;
   }
 
   .media-left {
-    width: auto;
+    flex-shrink: 0;
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 8px;
+  }
+
+  .media-indicator {
+    display: block;
+    width: 6px;
+    height: 6px;
+  }
+
+  .media-progress.visible-on-mobile {
+    display: block;
+    flex: 1;
+    max-width: none;
+    margin-left: 0;
+  }
+
+  .media-progress.visible-on-mobile .progress-stripe-container {
+    height: 10px;
+  }
+
+  .media-progress-bar {
     gap: 8px;
   }
 
-  .media-progress {
-    display: none; /* Hide progress bar on mobile to save space and CPU */
+  .split-two .timestamp-container {
+    justify-content: center;
+    width: 100%;
+    transform: scale(1);
   }
 
-  .media-right {
-    width: auto;
-    gap: 10px;
-    font-size: 0.6rem;
-  }
-
-  .timestamp-container {
-    min-width: 70px;
-    transform: scale(0.8);
+  .split-three {
+    justify-content: center;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
   }
 
   /* Mini Console Tabs */
@@ -1012,14 +1124,33 @@
   }
 
   .corner-bracket {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
   }
 
-  .top-left-bracket { top: 20px; left: 20px; }
-  .top-right-bracket { top: 20px; right: 20px; }
-  .bottom-left-bracket { bottom: 20px; left: 20px; }
-  .bottom-right-bracket { bottom: 20px; right: 20px; }
+  .corner-bracket::before { width: 12px; }
+  .corner-bracket::after { height: 12px; }
+
+  .top-left-bracket { top: 15px; left: 15px; }
+  .top-right-bracket { top: 15px; right: 15px; }
+  .bottom-left-bracket { bottom: 15px; left: 15px; }
+  .bottom-right-bracket { bottom: 15px; right: 15px; }
+
+  /* Compact Arrow in Header */
+  .custom-arrow {
+    width: 20px;
+    height: 20px;
+  }
+
+  .logo-indicators {
+    gap: 8px;
+  }
+
+  .roles-column {
+    margin-top: 10px;
+    gap: 8px;
+  }
 }
 
 /* Hide tabs on desktop */
