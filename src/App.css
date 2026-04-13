@@ -597,6 +597,17 @@
   font-weight: 700;
 }
 
+/* Terminal Alerts */
+.terminal-line.error {
+  color: #ff3e3e !important;
+  text-shadow: 0 0 5px rgba(255, 62, 62, 0.4);
+}
+
+.terminal-line.warning {
+  color: #ffb13e !important;
+  text-shadow: 0 0 5px rgba(255, 177, 62, 0.4);
+}
+
 /* Clock Section */
 .terminal-section {
   width: 100%;

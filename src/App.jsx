@@ -380,13 +380,13 @@ function App() {
 
               <div className="terminal-body">
                 <div className={`terminal-col ${activeTab === 0 ? 'active' : ''}`}>
-                  <TerminalLog title="ENGINE_PIPELINE" prefix="SYS_A >" frequency={3000} />
+                  <TerminalLog title="ENGINE_PIPELINE" category="engine" prefix="SYS_A >" frequency={3000} />
                 </div>
                 <div className={`terminal-col ${activeTab === 1 ? 'active' : ''}`}>
-                  <TerminalLog title="RENDER_THREAD" prefix="GPU_B >" frequency={1500} />
+                  <TerminalLog title="RENDER_THREAD" category="render" prefix="GPU_B >" frequency={1500} />
                 </div>
                 <div className={`terminal-col ${activeTab === 2 ? 'active' : ''}`}>
-                  <TerminalLog title="ASSET_FETCHER" prefix="NET_C >" frequency={4500} />
+                  <TerminalLog title="ASSET_FETCHER" category="assets" prefix="AST_C >" frequency={4500} />
                 </div>
               </div>
             </div>
