@@ -1,7 +1,8 @@
-import React, { Suspense, useRef } from 'react';
+import React, { Suspense, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import {
   EffectComposer,
@@ -20,6 +21,19 @@ import {
 } from '@react-three/postprocessing';
 import { BlendFunction, GlitchMode } from 'postprocessing';
 import Model from './Model';
+
+// Internal component to signal when Suspense has resolved and model is ready
+const LoadingDetector = ({ onReady }) => {
+  useEffect(() => {
+    console.log("LOG: LoadingDetector mounted - Model ready signal received");
+    const timer = setTimeout(() => {
+      console.log("LOG: Triggering deployment animation...");
+      onReady();
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []); // Only run once on mount
+  return null;
+};
 
 function MouseRig({ mouseX, mouseY, groupRef, baseRotation }) {
   const baseQ = new THREE.Quaternion();
@@ -55,13 +69,40 @@ function MouseRig({ mouseX, mouseY, groupRef, baseRotation }) {
 }
 
 export default function MechaHero({ mouseX, mouseY, isMobile }) {
-    const cameraPos = [4.581, 4.274, 4.25];
+  const [isLoaded, setIsLoaded] = useState(false);
+  const modelGroupRef = useRef(null);
+  const [currentScale, setCurrentScale] = useState(0);
+
+  // We'll handle the animation in a sub-component to access useFrame
+  const AnimationEngine = () => {
+    useFrame((state, delta) => {
+      if (!modelGroupRef.current) return;
+      
+      const target = isLoaded ? 1.0 : 0.0;
+      
+      // Industrial Spring Lerp (Simulated)
+      // We use a high velocity approach for that "snap"
+      const alpha = 0.15; // Speed
+      const current = modelGroupRef.current.scale.x;
+      const next = current + (target - current) * alpha;
+      
+      modelGroupRef.current.scale.set(next, next, next);
+      
+      // Add a tiny bit of "pulse" if we just reached 1.0
+      if (isLoaded && current < 0.99) {
+        // Just about to hit target
+      }
+    });
+    return null;
+  };
+
+  const cameraPos = [4.581, 4.274, 4.25];
   const cameraTarget = [-0.826, 0.753, -0.665];
   const cameraFov = 45;
 
   const modelPosition = [0, 0.5, 0];
   const modelRotation = [0, 0, 0];
-  const modelScale = 1;
+  const modelScale = 0; // Start at 0
 
   const ambientIntensity = 0.1;
   const pointIntensity = 1.3;
@@ -125,7 +166,6 @@ export default function MechaHero({ mouseX, mouseY, isMobile }) {
     hue: 0
   };
   const controlsRef = useRef(null);
-  const modelGroupRef = useRef(null);
 
   return (
     <div className="mecha-hero-container">
@@ -136,11 +176,13 @@ export default function MechaHero({ mouseX, mouseY, isMobile }) {
       >
         <PerspectiveCamera makeDefault position={cameraPos} fov={cameraFov} />
         {!isMobile && <MouseRig mouseX={mouseX} mouseY={mouseY} groupRef={modelGroupRef} baseRotation={modelRotation} />}
+        <AnimationEngine />
 
         <ambientLight intensity={ambientIntensity} args={[null, 11.92]} castShadow={false} />
         <pointLight position={pointPos} intensity={pointIntensity} color={pointColor} castShadow />
 
         <Suspense fallback={null}>
+          <LoadingDetector onReady={() => setIsLoaded(true)} />
           <group
             ref={modelGroupRef}
             name="Mecha Group"
