@@ -291,7 +291,7 @@
 /* Background outline text layer */
 .bg-text-container {
   position: absolute;
-  top: 46%;
+  top: 45%;
   left: 50%;
   width: 100%;
   pointer-events: none;
@@ -320,6 +320,7 @@
   align-items: center;
   position: relative;
   transform-style: preserve-3d;
+  
 }
 
 .bg-text-group > div {
@@ -601,18 +602,160 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 40px;
-  margin-top: 20px;
+  padding: 0 0px;
+
+  position: relative;
+  z-index: 100; /* Raise above 3D Canvas */
+  pointer-events: auto !important;
+}
+
+/* Unified Console Window - SHARED BASE */
+.terminal-unified-window {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .terminal-window-chrome {
-  display: none;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chrome-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.chrome-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.terminal-content-inner {
+  display: flex;
+  flex: 1;
+}
+
+/* DESKTOP SPECIFIC LAYOUT: VERTICAL SIDEBAR */
+.terminal-unified-window.is-desktop .terminal-content-inner {
+  flex-direction: row;
+  min-height: 100px; /* Ultra-compact height */
+}
+
+.terminal-unified-window.is-desktop .terminal-tabs-container {
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.02);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 5px 0;
+}
+
+.terminal-unified-window.is-desktop .terminal-body {
+  flex: 1;
+  padding: 10px 20px; /* Ultra-tight padding */
+  overflow-y: auto;
+}
+
+/* Universal Tab Buttons */
+.tab-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-mono);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.65rem;
+  padding: 8px 15px; /* Shorter buttons */
+  letter-spacing: 0.12em;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  border-left: 2px solid transparent;
+}
+
+.tab-btn.active {
+  color: var(--color-accent);
+  background: rgba(var(--color-accent-rgb, 0, 255, 255), 0.03);
+  border-left: 2px solid var(--color-accent);
 }
 
 .terminal-body {
+  display: block;
+  position: relative;
+}
+
+.terminal-col {
+  display: none;
+  width: 100%;
+  min-height: 100px; /* Reduced col height */
+}
+
+.terminal-col.active {
+  display: block;
+  animation: terminal-tab-flash 0.2s ease-out forwards;
+}
+
+@keyframes terminal-tab-flash {
+  0% { 
+    opacity: 0.5; 
+    filter: brightness(2) contrast(1.2);
+    transform: translateY(1px);
+  }
+  50% {
+    filter: brightness(1.5);
+    transform: translateY(-0.5px);
+  }
+  100% { 
+    opacity: 1; 
+    filter: brightness(1);
+    transform: translateY(0);
+  }
+}
+
+/* Universal Footer */
+.terminal-footer {
   display: flex;
-  justify-content: space-between;
-  gap: 60px;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 15px; /* Minimalist footer height */
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--color-accent);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.3);
+  margin-top: auto;
+}
+
+.terminal-unified-window.is-desktop .terminal-footer {
+  grid-column: span 2; /* If using grid, but we use flex col wrapper */
+}
+
+/* Ensure footer stays at bottom */
+.terminal-unified-window {
+  position: relative;
+}
+
+.rotating-cursor::after {
+  content: '/';
+  animation: terminal-rotate 0.8s step-end infinite;
+  display: inline-block;
+  font-weight: bold;
+}
+
+@keyframes terminal-rotate {
+  0% { content: '/'; }
+  25% { content: '-'; }
+  50% { content: '\\'; }
+  75% { content: '|'; }
 }
 
 .terminal-log-item {
@@ -1043,114 +1186,42 @@
     letter-spacing: 0.1em;
   }
 
-  /* Mini Console Tabs */
-  /* Mini Console Tabs */
   .terminal-section {
-    display: flex;
+    margin-top: 20px;
+    padding: 0 0px;
+  }
+
+  /* MOBILE OVERRIDES FOR CONSOLE */
+  .terminal-unified-window.is-mobile .terminal-content-inner {
     flex-direction: column;
-    padding: 0 10px;
-    margin-top: 15px;
+    min-height: auto;
   }
 
-  /* Console Window Styling */
-  .terminal-window-chrome {
+  .terminal-unified-window.is-mobile .terminal-tabs-container {
     display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-bottom: none;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.5);
-  }
-
-  .chrome-dots {
-    display: flex;
-    gap: 4px;
-    margin-right: 12px;
-  }
-
-  .chrome-dots span {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
-  }
-
-  .terminal-content-wrapper {
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
-  }
-
-  .terminal-body {
-    display: block; /* Stack on mobile */
-  }
-
-  .terminal-tabs-mobile {
-    display: flex !important; /* Force visibility */
-    width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    flex-direction: row;
     background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: none;
+    width: 100%;
+    padding: 0;
   }
 
-  .terminal-footer {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 15px;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--color-accent);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    opacity: 0.8;
-  }
-
-  .blinking-cursor {
-    animation: terminal-cursor-blink 1s step-end infinite;
-    font-weight: bold;
-  }
-
-  @keyframes terminal-cursor-blink {
-    50% { opacity: 0; }
-  }
-
-  .tab-btn {
+  .terminal-unified-window.is-mobile .tab-btn {
     flex: 1;
-    background: transparent;
-    border: none;
-    color: rgba(255, 255, 255, 0.4);
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    padding: 12px 5px;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.3s ease;
+    text-align: center;
+    padding: 15px 5px;
+    font-size: 0.6rem;
   }
 
-  .tab-btn.active {
-    color: var(--color-accent);
-    background: rgba(0, 229, 255, 0.05);
-  }
-
-  .tab-btn.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: var(--color-accent);
-    box-shadow: 0 0 10px var(--color-accent);
-  }
-
-  .terminal-col {
-    display: none;
-    width: 100%;
+  .terminal-unified-window.is-mobile .terminal-body {
     padding: 15px;
+    min-height: 140px;
+  }
+
+  .terminal-unified-window.is-mobile .terminal-footer {
+    padding: 10px 15px;
+    font-size: 0.6rem;
   }
 
   .terminal-col.active {

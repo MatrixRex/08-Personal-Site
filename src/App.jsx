@@ -150,8 +150,6 @@ function App() {
           <motion.div 
             className="bg-text-container back" 
             style={{ 
-              top: '50%',
-              left: '50%',
               x: "-50%",
               y: "-50%",
               rotateX: rotX, 
@@ -189,8 +187,6 @@ function App() {
           <motion.div 
             className="bg-text-container front"
             style={{ 
-              top: '50%',
-              left: '50%',
               x: "-50%",
               y: "-50%",
               rotateX: rotX, 
@@ -289,7 +285,7 @@ function App() {
             <motion.div className="media-bar glass split-one" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
               <div className="media-left">
                 <div className="media-indicator active"></div>
-                <span className="media-status">EXECUTING</span>
+                <span className="media-status">SYS_RUNNING</span>
               </div>
               <div className="media-progress visible-on-mobile">
                 <div className="progress-stripe-container">
@@ -325,7 +321,7 @@ function App() {
           >
             <div className="media-left">
               <div className="media-indicator active"></div>
-              <span className="media-status">EXECUTING</span>
+              <span className="media-status">SYS_RUNNING</span>
             </div>
             <div className="media-progress">
               <div className="progress-stripe-container">
@@ -359,40 +355,46 @@ function App() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
-          style={{ pointerEvents: isMobile ? 'auto' : 'none' }} // Ensure interaction is possible
         >
-          {/* Console Window Header */}
-          <div className="terminal-window-chrome">
-            <div className="chrome-dots">
-              <span></span><span></span><span></span>
-            </div>
-            <div className="chrome-path">~/LOG_FEED/SESSION_0x44F2</div>
-          </div>
-
-          <div className="terminal-content-wrapper">
-            {/* Mobile Tabs Header */}
-            <div className="terminal-tabs-mobile">
-              <button className={`tab-btn ${activeTab === 0 ? 'active' : ''}`} onClick={() => setActiveTab(0)}>ENGINE</button>
-              <button className={`tab-btn ${activeTab === 1 ? 'active' : ''}`} onClick={() => setActiveTab(1)}>RENDER</button>
-              <button className={`tab-btn ${activeTab === 2 ? 'active' : ''}`} onClick={() => setActiveTab(2)}>ASSETS</button>
-            </div>
-
-            <div className="terminal-body">
-              <div className={`terminal-col ${activeTab === 0 ? 'active' : ''}`}>
-                <TerminalLog title="ENGINE_PIPELINE" prefix="SYS_A >" frequency={3000} />
-              </div>
-              <div className={`terminal-col ${activeTab === 1 ? 'active' : ''}`}>
-                <TerminalLog title="RENDER_THREAD" prefix="GPU_B >" frequency={1500} />
-              </div>
-              <div className={`terminal-col ${activeTab === 2 ? 'active' : ''}`}>
-                <TerminalLog title="ASSET_FETCHER" prefix="NET_C >" frequency={4500} />
+          {/* Unified Console Window */}
+          <div className={`terminal-unified-window ${isMobile ? 'is-mobile' : 'is-desktop'}`}>
+            <div className="terminal-window-chrome">
+              <div className="chrome-dots">
+                <span></span><span></span><span></span>
               </div>
             </div>
 
-            {/* Console Footer */}
+            <div className="terminal-content-inner">
+              {/* Minimalist Tabs - Switches from Horizontal (Mobile) to Vertical (Desktop) in CSS */}
+              <div className="terminal-tabs-container">
+                <button className={`tab-btn ${activeTab === 0 ? 'active' : ''}`} onClick={() => setActiveTab(0)}>
+                  <span className="tab-prefix">{activeTab === 0 ? '>' : ' '}</span> ENGINE
+                </button>
+                <button className={`tab-btn ${activeTab === 1 ? 'active' : ''}`} onClick={() => setActiveTab(1)}>
+                  <span className="tab-prefix">{activeTab === 1 ? '>' : ' '}</span> RENDER
+                </button>
+                <button className={`tab-btn ${activeTab === 2 ? 'active' : ''}`} onClick={() => setActiveTab(2)}>
+                  <span className="tab-prefix">{activeTab === 2 ? '>' : ' '}</span> ASSETS
+                </button>
+              </div>
+
+              <div className="terminal-body">
+                <div className={`terminal-col ${activeTab === 0 ? 'active' : ''}`}>
+                  <TerminalLog title="ENGINE_PIPELINE" prefix="SYS_A >" frequency={3000} />
+                </div>
+                <div className={`terminal-col ${activeTab === 1 ? 'active' : ''}`}>
+                  <TerminalLog title="RENDER_THREAD" prefix="GPU_B >" frequency={1500} />
+                </div>
+                <div className={`terminal-col ${activeTab === 2 ? 'active' : ''}`}>
+                  <TerminalLog title="ASSET_FETCHER" prefix="NET_C >" frequency={4500} />
+                </div>
+              </div>
+            </div>
+
+            {/* Console Footer - Always full width at bottom */}
             <div className="terminal-footer">
-              <span className="ready-indicator">READY</span>
-              <span className="blinking-cursor">_</span>
+              <span className="executing-label">EXECUTING</span>
+              <span className="rotating-cursor"></span>
             </div>
           </div>
         </motion.div>
