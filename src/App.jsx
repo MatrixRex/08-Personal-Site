@@ -109,8 +109,8 @@ function App() {
                     <div className="ind-box"></div>
                     <div className="custom-arrow">
                       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 4V20H20" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter"/>
-                        <path d="M4 20L20 4" stroke="currentColor" stroke-width="4" stroke-linecap="butt"/>
+                        <path d="M4 4V20H20" stroke="currentColor" strokeWidth="4" strokeLinecap="butt" strokeLinejoin="miter"/>
+                        <path d="M4 20L20 4" stroke="currentColor" strokeWidth="4" strokeLinecap="butt"/>
                       </svg>
                     </div>
                   </div>
