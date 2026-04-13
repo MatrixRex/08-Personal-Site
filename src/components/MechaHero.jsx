@@ -25,6 +25,10 @@ function MouseRig({ mouseX, mouseY, groupRef, baseRotation }) {
   const baseQ = new THREE.Quaternion();
   const cameraRight = new THREE.Vector3();
   const worldUp = new THREE.Vector3(0, 1, 0);
+  
+  // Pre-allocate to avoid GC in useFrame
+  const qY = new THREE.Quaternion();
+  const qX = new THREE.Quaternion();
 
   useFrame((state) => {
     if (!mouseX || !mouseY || !groupRef.current) return;
@@ -41,8 +45,8 @@ function MouseRig({ mouseX, mouseY, groupRef, baseRotation }) {
     // 3. Hybrid logic: 
     // Left/Right (x) -> Rotate around world vertical axis (consistent)
     // Up/Down (y) -> Rotate around camera right axis (tilted relative to viewer)
-    const qY = new THREE.Quaternion().setFromAxisAngle(worldUp, -x * 0.003);
-    const qX = new THREE.Quaternion().setFromAxisAngle(cameraRight, -y * 0.005);
+    qY.setFromAxisAngle(worldUp, -x * 0.003);
+    qX.setFromAxisAngle(cameraRight, -y * 0.005);
     
     // 4. Apply
     groupRef.current.quaternion.copy(baseQ).premultiply(qY).premultiply(qX);
@@ -141,7 +145,7 @@ export default function MechaHero({ mouseX, mouseY, isMobile }) {
             ref={modelGroupRef}
             name="Mecha Group"
             position={modelPosition}
-            scale={modelScale} castShadow={true}
+            scale={modelScale}
           >
             <Model envMapIntensity={intensity} />
           </group>
