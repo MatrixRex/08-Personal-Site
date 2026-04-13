@@ -361,20 +361,39 @@ function App() {
           transition={{ delay: 1 }}
           style={{ pointerEvents: isMobile ? 'auto' : 'none' }} // Ensure interaction is possible
         >
-          {/* Mobile Tabs Header */}
-          <div className="terminal-tabs-mobile">
-            <button className={`tab-btn ${activeTab === 0 ? 'active' : ''}`} onClick={() => setActiveTab(0)}>ENGINE</button>
-            <button className={`tab-btn ${activeTab === 1 ? 'active' : ''}`} onClick={() => setActiveTab(1)}>RENDER</button>
-            <button className={`tab-btn ${activeTab === 2 ? 'active' : ''}`} onClick={() => setActiveTab(2)}>ASSETS</button>
+          {/* Console Window Header */}
+          <div className="terminal-window-chrome">
+            <div className="chrome-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div className="chrome-path">~/LOG_FEED/SESSION_0x44F2</div>
           </div>
-          <div className={`terminal-col ${activeTab === 0 ? 'active' : ''}`}>
-            <TerminalLog title="ENGINE_PIPELINE" prefix="SYS_A >" frequency={3000} />
-          </div>
-          <div className={`terminal-col ${activeTab === 1 ? 'active' : ''}`}>
-            <TerminalLog title="RENDER_THREAD" prefix="GPU_B >" frequency={1500} />
-          </div>
-          <div className={`terminal-col ${activeTab === 2 ? 'active' : ''}`}>
-            <TerminalLog title="ASSET_FETCHER" prefix="NET_C >" frequency={4500} />
+
+          <div className="terminal-content-wrapper">
+            {/* Mobile Tabs Header */}
+            <div className="terminal-tabs-mobile">
+              <button className={`tab-btn ${activeTab === 0 ? 'active' : ''}`} onClick={() => setActiveTab(0)}>ENGINE</button>
+              <button className={`tab-btn ${activeTab === 1 ? 'active' : ''}`} onClick={() => setActiveTab(1)}>RENDER</button>
+              <button className={`tab-btn ${activeTab === 2 ? 'active' : ''}`} onClick={() => setActiveTab(2)}>ASSETS</button>
+            </div>
+
+            <div className="terminal-body">
+              <div className={`terminal-col ${activeTab === 0 ? 'active' : ''}`}>
+                <TerminalLog title="ENGINE_PIPELINE" prefix="SYS_A >" frequency={3000} />
+              </div>
+              <div className={`terminal-col ${activeTab === 1 ? 'active' : ''}`}>
+                <TerminalLog title="RENDER_THREAD" prefix="GPU_B >" frequency={1500} />
+              </div>
+              <div className={`terminal-col ${activeTab === 2 ? 'active' : ''}`}>
+                <TerminalLog title="ASSET_FETCHER" prefix="NET_C >" frequency={4500} />
+              </div>
+            </div>
+
+            {/* Console Footer */}
+            <div className="terminal-footer">
+              <span className="ready-indicator">READY</span>
+              <span className="blinking-cursor">_</span>
+            </div>
           </div>
         </motion.div>
 
