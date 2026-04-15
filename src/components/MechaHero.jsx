@@ -172,7 +172,7 @@ export default function MechaHero({ mouseX, mouseY, isMobile }) {
       <Canvas 
         shadows={{ type: THREE.PCFShadowMap }} 
         gl={{ antialias: false, stencil: false }}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', pointerEvents: 'none', touchAction: 'auto' }}
       >
         <PerspectiveCamera makeDefault position={cameraPos} fov={cameraFov} />
         {!isMobile && <MouseRig mouseX={mouseX} mouseY={mouseY} groupRef={modelGroupRef} baseRotation={modelRotation} />}
