@@ -76,9 +76,12 @@ export default function MechaHero({ mouseX, mouseY, isMobile }) {
   // We'll handle the animation in a sub-component to access useFrame
   const AnimationEngine = () => {
     useFrame((state, delta) => {
-      if (!modelGroupRef.current) return;
+      // Responsive scale based on viewport height (only for desktop)
+      // At ~900px height or above, we use full scale (1.0). 
+      // As height decreases, we shrink the model slightly to maintain vertical padding.
+      const responsiveScale = isMobile ? 1.0 : Math.max(0.7, Math.min(1.0, state.size.height / 950));
       
-      const target = isLoaded ? 1.0 : 0.0;
+      const target = isLoaded ? responsiveScale : 0.0;
       
       // Industrial Spring Lerp (Simulated)
       // We use a high velocity approach for that "snap"
